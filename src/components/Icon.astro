@@ -1,0 +1,84 @@
+---
+// FontAwesome Icon Component for Astro
+import { library, icon } from '@fortawesome/fontawesome-svg-core';
+import { 
+  faInstagram, 
+  faTiktok, 
+  faSnapchatGhost, 
+  faXTwitter,
+  faFacebookF,
+  faWhatsapp,
+  
+} from '@fortawesome/free-brands-svg-icons';
+import {
+  faArrowLeft,
+  faSearchPlus,
+  faTimes,
+  faChevronRight,
+  faChevronLeft,
+  faBars,
+  faStar,
+  faStarHalfAlt,
+  faTruck,
+  faUndo,
+  faShoppingBag
+} from '@fortawesome/free-solid-svg-icons';
+
+// Add icons to library
+library.add(
+  faInstagram, faTiktok, faSnapchatGhost, faXTwitter, faFacebookF, faWhatsapp,
+  faArrowLeft, faSearchPlus, faTimes, faChevronRight, faChevronLeft, faBars,
+  faStar, faStarHalfAlt, faTruck, faUndo, faShoppingBag
+);
+
+export interface Props {
+  name: 'instagram' | 'tiktok' | 'snapchat-ghost' | 'x-twitter' | 'facebook' | 'whatsapp' | 'arrow-left' | 'search-plus' | 'times' | 'chevron-right' | 'chevron-left' | 'bars' | 'star' | 'star-half-alt' | 'truck' | 'undo' | 'shopping-bag';
+  class?: string;
+}
+
+const { name, class: className = '' } = Astro.props;
+
+// Map icon names to FontAwesome icons
+const iconMap: Record<string, any> = {
+  // Brands
+  'instagram': faInstagram,
+  'tiktok': faTiktok,
+  'snapchat-ghost': faSnapchatGhost,
+  'x-twitter': faXTwitter,
+  'facebook': faFacebookF,
+  'whatsapp': faWhatsapp,
+  // Solid
+  'arrow-left': faArrowLeft,
+  'search-plus': faSearchPlus,
+  'times': faTimes,
+  'chevron-right': faChevronRight,
+  'chevron-left': faChevronLeft,
+  'bars': faBars,
+  'star': faStar,
+  'star-half-alt': faStarHalfAlt,
+  'truck': faTruck,
+  'undo': faUndo,
+  'shopping-bag': faShoppingBag,
+};
+
+const selectedIcon = iconMap[name];
+const renderedIcon = icon(selectedIcon);
+// Add class to SVG for sizing
+let svgHtml = renderedIcon?.html[0] || '';
+svgHtml = svgHtml.replace('<svg ', `<svg class="fa-icon ${className}" `);
+---
+
+<Fragment set:html={svgHtml} />
+
+<style is:global>
+  .fa-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+  }
+  .fa-icon path {
+    fill: currentColor;
+  }
+</style>

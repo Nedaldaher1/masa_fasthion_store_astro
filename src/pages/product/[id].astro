@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductView from "../../components/product/ProductView.tsx";
+import { productsData } from "../../components/product/productsData";
+
+export async function getStaticPaths() {
+  return Object.keys(productsData).map((id) => ({
+    params: { id },
+  }));
+}
+
+const { id } = Astro.params;
+const product = productsData[id as string];
+---
+
+<Layout title={`${product?.name || 'منتج'} - ماسة فيشن`}>
+  <!-- خلفية جمالية -->
+  <div class="blob-bg">
+    <div class="blob blob-1 rounded-full"></div>
+    <div class="blob blob-2 rounded-full"></div>
+  </div>
+
+  <!-- محتوى الصفحة -->
+  <div class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- بطاقة المنتج الرئيسية -->
+    <div class=" rounded-[2.5rem] p-6 md:p-10">
+      <!-- React Island -->
+      <ProductView client:load productId={id as string} />
+    </div>
+  </div>
+</Layout>

@@ -1,22 +1,167 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+// src/layouts/SeoLayout.astro
+import '../styles/global.css';
+import 'aos/dist/aos.css'; 
+import Icon from '../components/Icon.astro';
+import Navbar from "../components/ui/navbar";
+import CartWrapper from "../components/cart/CartWrapper";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+export interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = "ماسة فيشن",
+  description = "متجر إلكتروني لبيع عبايات المخمل عالية الجودة في الأردن",
+  canonical = "https://example.com",
+  image = "https://example.com/og/masa-fashion.jpg",
+  noindex = false,
+} = Astro.props;
+
+const siteName = "ماسة فيشن";
+const locale = "ar_AR";
+const phone = "+962797514430";
+const whatsappPhone = "962797514430";
+
+// Structured Data (Schema.org)
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  name: siteName,
+  url: canonical,
+  description,
+  image,
+  telephone: phone,
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "JO",
+    addressRegion: "عمان",
+    addressLocality: "عمان",
+  },
+  sameAs: [
+    "https://web.facebook.com/profile.php?id=61581360869698",
+    "https://www.instagram.com/masa.fashion.jo/"
+  ]
+};
+const PIXEL_ID = import.meta.env.PUBLIC_FACEBOOK_PIXEL_ID; // حطه في .env
+
+---
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Robots -->
+    {noindex
+      ? <meta name="robots" content="noindex,nofollow" />
+      : <meta name="robots" content="index,follow" />
+    }
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+
+    <!-- Social Profiles -->
+    <meta property="og:see_also" content="https://web.facebook.com/profile.php?id=61581360869698" />
+    <meta property="og:see_also" content="https://www.instagram.com/masa.fashion.jo/" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+      {JSON.stringify(jsonLd)}
+    </script>
+
+    <meta name="theme-color" content="#111111" />
+    <!-- Facebook Pixel Code -->
+  {PIXEL_ID && (
+    <>
+      <script is:inline>
+        {`
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '${PIXEL_ID}');
+          fbq('track', 'PageView');
+        `}
+      </script>
+
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style="display:none"
+          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
+          alt=""
+        />
+      </noscript>
+    </>
+  )}
+<!-- End Facebook Pixel Code -->
+  </head>
+
+  <body>
+    <CartWrapper client:load whatsappPhone={whatsappPhone}>
+      <header>
+        <Navbar client:idle />
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer id="footer" class="border-t border-white/40 glass relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <!-- Logo & Copyright -->
+                <div class="text-center md:text-right">
+                    <a href="/" class="text-2xl font-bold text-textDark mb-2"> ماسة فاشين</a>
+                    <p class="text-sm text-textLight">© 2025 جميع الحقوق محفوظة.</p>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex gap-4 space-x-reverse">
+                    <a href="https://www.instagram.com/masa.fashion.jo/" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <Icon name="instagram" />
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=%2B962797514430&fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExbXROS0x2d01xelZLSGZGS3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR7uor35_x742VkZ5b5NuuWM389WbIkZDLN2Lx2uNRdkMvX4rbf9zjEUbuPulQ_aem_Lgk_wBuc7Oo5O2ZhMIgsHg" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <Icon name="whatsapp" />
+                    </a>
+                    <a href="https://web.facebook.com/profile.php?id=61581360869698" target="_blank" rel="noopener" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <Icon name="facebook" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </CartWrapper>
+<script>
+	import AOS from 'aos';
+    AOS.init()
+</script>
+  </body>
+</html>
