@@ -60,7 +60,10 @@ const PIXEL_ID = import.meta.env.PUBLIC_FACEBOOK_PIXEL_ID; // حطه في .env
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16">
+<link rel="icon" href="/favicon.ico" sizes="any">
     <!-- Robots -->
     {noindex
       ? <meta name="robots" content="noindex,nofollow" />
