@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCart, type CartItem } from "./CartContext";
 import { Close } from "../../icons/react/close";
+import { trackPurchase } from "../../utils/metaPixel";
 
 type Props = {
   open: boolean;
@@ -77,6 +78,18 @@ ${itemsText}${deliveryText}
 
     const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
+
+    // تتبع Purchase في Meta Pixel
+    trackPurchase({
+      items: items.map(item => ({
+        productId: item.productId,
+        productName: item.productName,
+        price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+        quantity: item.quantity,
+      })),
+      totalValue: totalPrice,
+      numItems: totalQuantity,
+    });
 
     onSubmitOrder?.();
     clearCart();

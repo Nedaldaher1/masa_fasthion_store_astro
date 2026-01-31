@@ -7,15 +7,13 @@ Allow: /
 
 # منع فهرسة ملفات البناء التقنية
 Disallow: /_astro/
-Disallow: /*.json$
 
 # Sitemap
-Sitemap: https://masa-fashion.store/sitemap.xml
+Sitemap: https://masa-fashion.store/sitemap-index.xml
 
 
 # ==============================
-# Optional: AI Crawlers
-# (قد لا يلتزم الجميع)
+# AI Crawlers - منع الزحف لبيانات التدريب
 # ==============================
 
 User-agent: GPTBot
@@ -28,4 +26,7 @@ User-agent: CCBot
 Disallow: /
 
 User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
 Disallow: /

@@ -64,6 +64,10 @@ const PIXEL_ID = import.meta.env.PUBLIC_FACEBOOK_PIXEL_ID; // حطه في .env
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
 <link rel="icon" href="/favicon.ico" sizes="any">
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
     <!-- Robots -->
     {noindex
       ? <meta name="robots" content="noindex,nofollow" />
@@ -134,6 +138,8 @@ const PIXEL_ID = import.meta.env.PUBLIC_FACEBOOK_PIXEL_ID; // حطه في .env
       </header>
 
       <main>
+        <div class="ramadan-overlay-left" aria-hidden="true"></div>
+        <div class="ramadan-overlay-right" aria-hidden="true"></div>
         <slot />
       </main>
 

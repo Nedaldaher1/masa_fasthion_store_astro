@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useCart } from "./CartContext";
 import { Close } from "../../icons/react/close";
+import { trackInitiateCheckout } from "../../utils/metaPixel";
 
 type Props = {
   onCheckout: () => void;
@@ -16,6 +17,28 @@ export default function CartDrawer({ onCheckout }: Props) {
     isCartOpen,
     setIsCartOpen,
   } = useCart();
+
+  // تتبع فتح السلة مرة واحدة فقط
+  const hasTrackedCheckout = useRef(false);
+  
+  useEffect(() => {
+    if (isCartOpen && items.length > 0 && !hasTrackedCheckout.current) {
+      trackInitiateCheckout({
+        items: items.map(item => ({
+          productId: item.productId,
+          productName: item.productName,
+          price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+          quantity: item.quantity,
+        })),
+        totalValue: totalPrice,
+        numItems: totalItems,
+      });
+      hasTrackedCheckout.current = true;
+    }
+    if (!isCartOpen) {
+      hasTrackedCheckout.current = false;
+    }
+  }, [isCartOpen, items, totalPrice, totalItems]);
 
   // منع السكرول عند فتح السلة
   useEffect(() => {

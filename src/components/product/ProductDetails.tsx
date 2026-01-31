@@ -1,5 +1,6 @@
 import type { Product } from "./productsData";
 import { Star } from "../../icons/react/star";
+import { trackAddToCart } from "../../utils/metaPixel";
 
 type Props = {
   product: Product;
@@ -52,6 +53,15 @@ function addToCart(newItem: Omit<CartItem, "quantity">) {
   }
 
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  
+  // تتبع AddToCart في Meta Pixel
+  trackAddToCart({
+    productId: newItem.productId,
+    productName: newItem.productName,
+    price: parseFloat(newItem.price.replace(/[^\d.]/g, "")) || 0,
+    colorName: newItem.colorName,
+    size: newItem.size,
+  });
   
   // إرسال event لتحديث الأزرار والسلة
   window.dispatchEvent(new CustomEvent("cart-updated"));
