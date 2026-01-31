@@ -10,6 +10,8 @@ import svgr from 'vite-plugin-svgr';
 
 import compress from 'astro-compress';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -17,4 +19,5 @@ export default defineConfig({
   },
 
   integrations: [react(), icon(), compress()],
+  adapter: cloudflare(),
 });
