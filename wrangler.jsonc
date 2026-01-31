@@ -1,16 +1,8 @@
 {
-	"main": "dist/_worker.js/index.js",
-	"name": "masafasthion",
-  "compatibility_date": "2026-01-31",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist"
-	},
-	"observability": {
-    "enabled": true
-  }
+"name": "masafasthion",
+"compatibility_date": "2026-01-31",
+ "assets": {
+    "directory": "./dist"
+  },
+  "compatibility_flags": ["nodejs_compat"]
 }
