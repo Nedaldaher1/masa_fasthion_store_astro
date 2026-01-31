@@ -1,8 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import type { ColorItem } from "./productsData";
+
+// نوع موسّع يدعم الصور المحسّنة
+type ColorItemWithOptimized = {
+  name: string;
+  hex: string;
+  image: string;
+  thumbImage?: string;
+};
 
 type Props = {
-  colors: ColorItem[];
+  colors: ColorItemWithOptimized[];
   selectedColorIndex: number;
   onSelectColorIndex: (idx: number) => void;
 };
@@ -34,6 +41,8 @@ export default function ProductGallery({
         <img
           src={main?.image}
           alt="Product Image"
+          width={800}
+          height={1066}
           className={[
             "object-cover w-full h-full transition-transform duration-700 group-hover:scale-110",
             "transition-opacity duration-200",
@@ -60,7 +69,13 @@ export default function ProductGallery({
       ].join(" ")}
       aria-label={`اختر صورة ${c.name}`}
     >
-      <img src={c.image} className="w-full h-full object-cover" alt={c.name} />
+      <img 
+        src={c.thumbImage || c.image} 
+        width={80}
+        height={80}
+        className="w-full h-full object-cover" 
+        alt={c.name} 
+      />
     </button>
   ))}
 </div>

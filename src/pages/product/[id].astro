@@ -2,6 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import ProductView from "../../components/product/ProductView.tsx";
 import { productsData } from "../../components/product/productsData";
+import { getImage } from 'astro:assets';
+import { getProductImage } from '../../components/product/productImages';
 
 export async function getStaticPaths() {
   return Object.keys(productsData).map((id) => ({
@@ -11,6 +13,44 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const product = productsData[id as string];
+
+// توليد صور محسّنة لكل لون
+const optimizedColors = await Promise.all(
+  product.colors.map(async (color) => {
+    const imageData = getProductImage(color.image);
+    
+    if (imageData) {
+      // صورة رئيسية كبيرة
+      const mainImage = await getImage({
+        src: imageData,
+        width: 800,
+        height: 1066,
+        format: 'webp',
+        quality: 85,
+      });
+      
+      // صورة مصغرة
+      const thumbImage = await getImage({
+        src: imageData,
+        width: 160,
+        height: 160,
+        format: 'webp',
+        quality: 75,
+      });
+      
+      return {
+        ...color,
+        image: mainImage.src,
+        thumbImage: thumbImage.src,
+      };
+    }
+    
+    return {
+      ...color,
+      thumbImage: color.image,
+    };
+  })
+);
 ---
 
 <Layout title={`${product?.name || 'منتج'} - ماسة فيشن`}>
@@ -25,7 +65,11 @@ const product = productsData[id as string];
     <!-- بطاقة المنتج الرئيسية -->
     <div class=" rounded-[2.5rem] p-6 md:p-10">
       <!-- React Island -->
-      <ProductView client:load productId={id as string} />
+      <ProductView 
+        client:load 
+        productId={id as string} 
+        optimizedColors={optimizedColors}
+      />
     </div>
   </div>
 </Layout>

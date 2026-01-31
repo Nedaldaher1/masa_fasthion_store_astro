@@ -2,19 +2,54 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from '../components/Icon.astro';
 import { productsData } from '../components/product/productsData';
+import { Image, getImage } from 'astro:assets';
+import { productImages, getProductImage } from '../components/product/productImages';
 
 const title = "ماسة فيشن | Masa Fashion";
 const description = "متجر إلكتروني لبيع عبايات المخمل عالية الجودة في الأردن - عمان";
 const canonical = "https://example.com";
 const image = "https://example.com/og/masa-fashion.jpg";
 
-// تحويل البيانات إلى مصفوفة للتكرار عليها
-const products = Object.entries(productsData).map(([id, product]) => ({
-  id,
-  ...product,
-  // أول صورة من الألوان
-  mainImage: product.colors[0]?.image || '',
-}));
+// استيراد صورة Hero مباشرة
+import heroImage from '../assets/products/product_6/4.jpg';
+
+// استيراد صور المراجعات
+const reviewImagesGlob = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/reviews/*.png',
+  { eager: true }
+);
+
+// تحويل صور المراجعات إلى مصفوفة مرتبة
+const reviewImages = Object.entries(reviewImagesGlob)
+  .sort((a, b) => {
+    const numA = parseInt(a[0].match(/(\d+)\.png$/)?.[1] || '0');
+    const numB = parseInt(b[0].match(/(\d+)\.png$/)?.[1] || '0');
+    return numA - numB;
+  })
+  .map(([_, module]) => module.default);
+
+// تحويل البيانات إلى مصفوفة للتكرار عليها مع الصور المحسّنة
+const products = await Promise.all(
+  Object.entries(productsData).map(async ([id, product]) => {
+    const imagePath = product.colors[0]?.image || '';
+    const imageData = getProductImage(imagePath);
+    
+    // توليد صورة محسّنة بصيغة WebP
+    const optimizedImage = imageData ? await getImage({
+      src: imageData,
+      width: 600,
+      height: 800,
+      format: 'webp',
+    }) : null;
+    
+    return {
+      id,
+      ...product,
+      mainImage: optimizedImage?.src || imagePath,
+      originalImage: imagePath,
+    };
+  })
+);
 ---
 
 <Layout title={title} description={description} canonical={canonical} image={image}>
@@ -56,13 +91,17 @@ const products = Object.entries(productsData).map(([id, product]) => ({
         <div class="relative z-10 mt-10 md:mt-0" data-aos="zoom-in">
           <div class="glass-card rounded-[2.5rem] p-4 hover:rotate-0 transition-transform duration-700">
             <div class="relative overflow-hidden rounded-[2rem] bg-gray-50/50">
-              <img
-                src="/products/product_6/4.jpg"
+              <Image
+                src={heroImage}
                 alt="عارضة أزياء ترتدي عباية من ماسة فيشن"
                 class="object-contain w-full h-auto max-h-[600px] hover:scale-105 transition-transform duration-1000"
                 loading="eager"
                 decoding="async"
                 fetchpriority="high"
+                widths={[400, 600, 800, 1000]}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                format="webp"
+                quality={80}
               />
             </div>
           </div>
@@ -90,10 +129,13 @@ const products = Object.entries(productsData).map(([id, product]) => ({
               <div class="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-gray-100">
                 <img
                   src={product.mainImage}
+                  srcset={`${product.mainImage} 1x`}
                   alt={product.name}
                   class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                   decoding="async"
+                  width="600"
+                  height="800"
                 />
                 {index === 0 && (
                   <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-black shadow-sm">
@@ -129,25 +171,27 @@ const products = Object.entries(productsData).map(([id, product]) => ({
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="reviewsGrid">
-        {Array.from({ length: 14 }).map((_, i) => {
-          const n = i + 1;
-          const src = `./reviwes/${n}.png`;
+        {reviewImages.map((reviewImg, i) => {
           return (
             <button
               type="button"
               class="glass-card rounded-2xl overflow-hidden group cursor-pointer"
-              data-review={src}
-              aria-label={`فتح صورة رأي عميل رقم ${n}`}
+              data-review-index={i}
+              aria-label={`فتح صورة رأي عميل رقم ${i + 1}`}
               data-aos="zoom-in"
               data-aos-delay={i * 50}
             >
               <div class="relative aspect-square overflow-hidden">
-                <img
-                  src={src}
+                <Image
+                  src={reviewImg}
                   alt="رأي عميل"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                   decoding="async"
+                  width={400}
+                  height={400}
+                  format="webp"
+                  quality={75}
                 />
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                   <span class="text-white text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"><Icon name="search-plus" class="text-xl" /></span>
@@ -179,12 +223,12 @@ const products = Object.entries(productsData).map(([id, product]) => ({
   </div>
 
   {/* JS خفيف ومؤجل */}
-  <script is:inline defer>
+  <script is:inline defer define:vars={{ reviewImageUrls: reviewImages.map(img => img.src) }}>
     
 
 
     // Reviews modal (event delegation)
-    const reviewImages = Array.from({ length: 14 }, (_, i) => `./reviwes/${i + 1}.png`);
+    // استخدام URLs الصور المحسّنة من Astro
     let currentReviewIndex = 0;
 
     const modal = document.getElementById("reviewModal");
@@ -194,9 +238,9 @@ const products = Object.entries(productsData).map(([id, product]) => ({
     const prevBtn = document.getElementById("prevReview");
     const grid = document.getElementById("reviewsGrid");
 
-    const openModal = (src) => {
-      currentReviewIndex = reviewImages.indexOf(src);
-      modalImage.src = src;
+    const openModal = (index) => {
+      currentReviewIndex = index;
+      modalImage.src = reviewImageUrls[index];
       modal.classList.remove("hidden");
       modal.classList.add("flex");
       document.documentElement.style.overflow = "hidden";
@@ -210,14 +254,14 @@ const products = Object.entries(productsData).map(([id, product]) => ({
     };
 
     const navigate = (dir) => {
-      currentReviewIndex = (currentReviewIndex + dir + reviewImages.length) % reviewImages.length;
-      modalImage.src = reviewImages[currentReviewIndex];
+      currentReviewIndex = (currentReviewIndex + dir + reviewImageUrls.length) % reviewImageUrls.length;
+      modalImage.src = reviewImageUrls[currentReviewIndex];
     };
 
     grid?.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-review]");
+      const btn = e.target.closest("button[data-review-index]");
       if (!btn) return;
-      openModal(btn.getAttribute("data-review"));
+      openModal(parseInt(btn.getAttribute("data-review-index")));
     });
 
     closeBtn?.addEventListener("click", closeModal);

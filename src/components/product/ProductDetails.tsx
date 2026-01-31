@@ -6,6 +6,7 @@ type Props = {
   productId: string;
   selectedColorIndex: number;
   selectedColorName: string;
+  selectedColorImage: string; // الصورة المحسّنة من Astro
   selectedSize: string;
   onSelectSize: (size: string) => void;
 };
@@ -62,6 +63,7 @@ export default function ProductDetails({
   productId,
   selectedColorIndex,
   selectedColorName,
+  selectedColorImage,
   selectedSize,
   onSelectSize,
 }: Props) {
@@ -85,7 +87,7 @@ export default function ProductDetails({
       size: selectedSize,
       sizeDimensions: selectedSizeData?.dimensions,
       price: product.price,
-      image: selectedColor?.image || product.colors[0]?.image || "",
+      image: selectedColorImage || selectedColor?.image || product.colors[0]?.image || "",
     });
   };
 
@@ -104,7 +106,7 @@ export default function ProductDetails({
       size: selectedSize,
       sizeDimensions: selectedSizeData?.dimensions,
       price: product.price,
-      image: selectedColor?.image || product.colors[0]?.image || "",
+      image: selectedColorImage || selectedColor?.image || product.colors[0]?.image || "",
     });
   };
 

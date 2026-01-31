@@ -18,6 +18,11 @@ export default defineConfig({
     plugins: [tailwindcss(),svgr()]
   },
 
+  image: {
+    // تفعيل توليد صيغ WebP و AVIF تلقائياً
+    experimentalLayout: 'responsive',
+  },
+
   integrations: [react(), icon(), compress()],
   adapter: cloudflare(),
 });

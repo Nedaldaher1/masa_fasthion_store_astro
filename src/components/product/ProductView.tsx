@@ -3,20 +3,39 @@ import { productsData } from "./productsData";
 import ProductGallery from "./ProductGallery";
 import ProductDetails from "./ProductDetails";
 
-type Props = { productId: string };
+// نوع الألوان المحسّنة من Astro
+type OptimizedColor = {
+  name: string;
+  hex: string;
+  image: string;
+  thumbImage?: string;
+};
+
+type Props = { 
+  productId: string;
+  optimizedColors?: OptimizedColor[];
+};
 
 const CURRENCY = "JOD";
 
 
-export default function ProductView({ productId }: Props) {
+export default function ProductView({ productId, optimizedColors }: Props) {
   const product = useMemo(() => {
     return productsData[productId] ?? productsData.product1;
   }, [productId]);
 
+  // استخدام الألوان المحسّنة إذا توفرت، وإلا استخدام الأصلية
+  const colors = useMemo(() => {
+    if (optimizedColors && optimizedColors.length > 0) {
+      return optimizedColors;
+    }
+    return product.colors;
+  }, [optimizedColors, product.colors]);
+
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string>("");
 
-  const selectedColor = product.colors[selectedColorIndex] ?? product.colors[0];
+  const selectedColor = colors[selectedColorIndex] ?? colors[0];
 
   // Helper لتتبع البيكسل بأمان
   const track = useCallback((eventName: string, params?: Record<string, any>) => {
@@ -53,7 +72,7 @@ export default function ProductView({ productId }: Props) {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <ProductGallery
-          colors={product.colors}
+          colors={colors}
           selectedColorIndex={selectedColorIndex}
           onSelectColorIndex={setSelectedColorIndex}
         />
@@ -63,6 +82,7 @@ export default function ProductView({ productId }: Props) {
           productId={productId}
           selectedColorIndex={selectedColorIndex}
           selectedColorName={selectedColor?.name ?? ""}
+          selectedColorImage={selectedColor?.image ?? ""}
           selectedSize={selectedSize}
           onSelectSize={setSelectedSize}
         />
