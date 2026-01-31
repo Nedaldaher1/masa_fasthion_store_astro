@@ -1,8 +1,5 @@
 {
-"name": "masafasthion",
-"compatibility_date": "2026-01-31",
- "assets": {
-    "directory": "./dist"
-  },
-  "compatibility_flags": ["nodejs_compat"]
+  "name": "masafasthion",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-01-31"
 }
