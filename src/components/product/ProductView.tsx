@@ -7,6 +7,7 @@ type Props = { productId: string };
 
 const CURRENCY = "JOD";
 
+
 export default function ProductView({ productId }: Props) {
   const product = useMemo(() => {
     return productsData[productId] ?? productsData.product1;
