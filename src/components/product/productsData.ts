@@ -16,27 +16,6 @@ export const productsData: Record<string, Product> = {
   /* 🔥 عبايات المخمل أولًا */
   /* ===================== */
 
-  product_1: {
-    name: "عباية مخمل شتوي ",
-    nameItemInStorage:"عباية مخمل ابو خط القديم",
-    description:
-      "عباية مخمل شتوي ثقيل، ناعمة وراقية، تعطيك إحساس بالدفء مع إطلالة أنيقة تناسب الشتاء والمناسبات اليومية.",
-    price: "15.00 د.أ",
-    category: "قسم العبايات الشتوية",
-    colors: [
-      { name: "زيتي", hex: "#949A84", image: "/products/product_1/1.png" },
-      { name: "كحلي", hex: "#34364B", image: "/products/product_1/2.png" },
-      { name: "زهري", hex: "#B47169", image: "/products/product_1/3.png" },
-      { name: "أسود", hex: "#000000", image: "/products/product_1/4.jpg" },
-      { name: "تركواز", hex: "#5788A8", image: "/products/product_1/5.jpg" },
-    ],
-    sizes:[
-      { number:"1", dimensions:"بيلبس من وزن 60 كيلو الى وزن 80" },
-      { number:"2", dimensions:"بيلبس من وزن 80 كيلو الى وزن 100" },
-      { number:"3", dimensions:"بيلبس من وزن 100 كيلو الى وزن 120" }
-    ],
-        outofstock:true
-  },
 
   product_3: {
     name: "عباية مخمل شتوي فاخر ",
@@ -77,6 +56,26 @@ export const productsData: Record<string, Product> = {
       { number:"3", dimensions:"بيلبس من وزن 100 كيلو الى وزن 120" }
     ]
   },
+    product_1: {
+    name: "عباية مخمل شتوي ",
+    nameItemInStorage:"عباية مخمل ابو خط القديم",
+    description:
+      "عباية مخمل شتوي ثقيل، ناعمة وراقية، تعطيك إحساس بالدفء مع إطلالة أنيقة تناسب الشتاء والمناسبات اليومية.",
+    price: "15.00 د.أ",
+    category: "قسم العبايات الشتوية",
+    colors: [
+      { name: "زيتي", hex: "#949A84", image: "/products/product_1/1.png" },
+      { name: "كحلي", hex: "#34364B", image: "/products/product_1/2.png", outofstock:true },
+      { name: "زهري", hex: "#B47169", image: "/products/product_1/3.png" },
+      { name: "أسود", hex: "#000000", image: "/products/product_1/4.jpg" ,  outofstock:true },
+      { name: "تركواز", hex: "#5788A8", image: "/products/product_1/5.jpg" },
+    ],
+    sizes:[
+      { number:"1", dimensions:"بيلبس من وزن 60 كيلو الى وزن 80" },
+      { number:"2", dimensions:"بيلبس من وزن 80 كيلو الى وزن 100" },
+    ],
+  },
+
   product_6: {
     name: "عباية مخمل شتوي فاخر جيب",
     nameItemInStorage:"عباية مخمل شتوي جيب",
