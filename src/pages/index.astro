@@ -137,7 +137,11 @@ const products = await Promise.all(
                   width="600"
                   height="800"
                 />
-                {index === 0 && (
+                {product.outofstock ? (
+                  <div class="absolute top-4 right-4 bg-red-500 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm">
+                    غير متوفر
+                  </div>
+                ) : index === 0 && (
                   <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-black shadow-sm">
                     جديد
                   </div>

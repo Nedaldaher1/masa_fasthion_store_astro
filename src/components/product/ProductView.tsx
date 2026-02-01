@@ -9,6 +9,7 @@ type OptimizedColor = {
   hex: string;
   image: string;
   thumbImage?: string;
+  outofstock?: boolean;
 };
 
 type Props = { 
@@ -24,10 +25,14 @@ export default function ProductView({ productId, optimizedColors }: Props) {
     return productsData[productId] ?? productsData.product1;
   }, [productId]);
 
-  // استخدام الألوان المحسّنة إذا توفرت، وإلا استخدام الأصلية
+  // استخدام الألوان المحسّنة إذا توفرت، مع دمج بيانات outofstock من الأصلية
   const colors = useMemo(() => {
     if (optimizedColors && optimizedColors.length > 0) {
-      return optimizedColors;
+      // دمج outofstock من product.colors الأصلية
+      return optimizedColors.map((c, idx) => ({
+        ...c,
+        outofstock: product.colors[idx]?.outofstock ?? false,
+      }));
     }
     return product.colors;
   }, [optimizedColors, product.colors]);
@@ -83,6 +88,7 @@ export default function ProductView({ productId, optimizedColors }: Props) {
           selectedColorIndex={selectedColorIndex}
           selectedColorName={selectedColor?.name ?? ""}
           selectedColorImage={selectedColor?.image ?? ""}
+          selectedColorOutofstock={selectedColor?.outofstock}
           selectedSize={selectedSize}
           onSelectSize={setSelectedSize}
         />

@@ -6,6 +6,7 @@ type ColorItemWithOptimized = {
   hex: string;
   image: string;
   thumbImage?: string;
+  outofstock?: boolean;
 };
 
 type Props = {
@@ -58,27 +59,33 @@ export default function ProductGallery({
 
       {/* الصور المصغرة */}
       <div className="grid grid-cols-3 gap-4 justify-items-center pb-2 lg:grid-cols-6 lg:justify-items-start">
-  {colors.map((c, idx) => (
-    <button
-      key={`${c.name}-${idx}`}
-      type="button"
-      onClick={() => onSelectColorIndex(idx)}
-      className={[
-        "relative w-20 h-20 rounded-xl overflow-hidden border-2 hover:border-black transition-all focus:border-black focus:ring-2 focus:ring-black/20",
-        idx === selectedColorIndex ? "border-black" : "border-transparent",
-      ].join(" ")}
-      aria-label={`اختر صورة ${c.name}`}
-    >
-      <img 
-        src={c.thumbImage || c.image} 
-        width={80}
-        height={80}
-        className="w-full h-full object-cover" 
-        alt={c.name} 
-      />
-    </button>
-  ))}
-</div>
+        {colors.map((c, idx) => (
+          <button
+            key={`${c.name}-${idx}`}
+            type="button"
+            onClick={() => onSelectColorIndex(idx)}
+            className={[
+              "relative w-20 h-20 rounded-xl overflow-hidden border-2 hover:border-black transition-all focus:border-black focus:ring-2 focus:ring-black/20",
+              idx === selectedColorIndex ? "border-black" : "border-transparent",
+              c.outofstock ? "opacity-60" : "",
+            ].join(" ")}
+            aria-label={`اختر صورة ${c.name}`}
+          >
+            <img 
+              src={c.thumbImage || c.image} 
+              width={80}
+              height={80}
+              className="w-full h-full object-cover" 
+              alt={c.name} 
+            />
+            {c.outofstock && (
+              <span className="absolute bottom-0 left-0 right-0 bg-red-500 text-white text-[8px] py-0.5 text-center font-bold">
+                غير متوفر
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
 
 
       {/* أزرار الألوان */}
@@ -87,17 +94,24 @@ export default function ProductGallery({
           <button
             key={`color-${c.name}-${idx}`}
             type="button"
-            title={c.name}
+            title={c.outofstock ? `${c.name} - غير متوفر` : c.name}
             onClick={() => onSelectColorIndex(idx)}
             className={[
-              "w-10 h-10 rounded-full border border-gray-200 shadow-sm transition-all",
+              "relative w-10 h-10 rounded-full border border-gray-200 shadow-sm transition-all",
               idx === selectedColorIndex
                 ? "ring-2 ring-offset-2 ring-black transform scale-110"
                 : "",
+              c.outofstock ? "opacity-60" : "",
             ].join(" ")}
             style={{ backgroundColor: c.hex }}
-            aria-label={`اللون ${c.name}`}
-          />
+            aria-label={`اللون ${c.name}${c.outofstock ? ' - غير متوفر' : ''}`}
+          >
+            {c.outofstock && (
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="w-full h-0.5 bg-red-500 rotate-45 absolute"></span>
+              </span>
+            )}
+          </button>
         ))}
       </div>
     </div>

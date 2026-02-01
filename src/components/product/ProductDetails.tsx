@@ -8,6 +8,7 @@ type Props = {
   selectedColorIndex: number;
   selectedColorName: string;
   selectedColorImage: string; // الصورة المحسّنة من Astro
+  selectedColorOutofstock?: boolean; // هل اللون المختار غير متوفر
   selectedSize: string;
   onSelectSize: (size: string) => void;
 };
@@ -74,13 +75,16 @@ export default function ProductDetails({
   selectedColorIndex,
   selectedColorName,
   selectedColorImage,
+  selectedColorOutofstock,
   selectedSize,
   onSelectSize,
 }: Props) {
+  // حساب حالة عدم التوفر
+  const selectedSizeData = product.sizes?.find((s) => s.number === selectedSize);
+  const isOutOfStock = product.outofstock || selectedColorOutofstock || selectedSizeData?.outofstock;
   const prettyName = product.name.replace(" - ", "<br>");
 
   const selectedColor = product.colors[selectedColorIndex];
-  const selectedSizeData = product.sizes?.find((s) => s.number === selectedSize);
 
   const handleAddToCart = () => {
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
@@ -183,19 +187,29 @@ export default function ProductDetails({
           <div className="flex flex-wrap gap-3">
             {product.sizes.map((s) => {
               const active = selectedSize === s.number;
+              const sizeOutOfStock = s.outofstock;
               return (
                 <button
                   key={s.number}
                   type="button"
                   onClick={() => onSelectSize(s.number)}
                   className={[
-                    "size-btn w-12 h-12 rounded-xl glass border flex items-center justify-center font-bold transition-all cursor-pointer",
+                    "size-btn relative w-auto min-w-12 h-12 px-3 rounded-xl glass border flex items-center justify-center font-bold transition-all",
                     active
                       ? "bg-black border-black text-black"
                       : "border-gray-300 text-gray-400 hover:border-black",
+                    sizeOutOfStock
+                      ? "opacity-50 cursor-not-allowed line-through"
+                      : "cursor-pointer",
                   ].join(" ")}
+                  title={sizeOutOfStock ? `رقم ${s.number} - غير متوفر` : `رقم ${s.number}`}
                 >
                   رقم {s.number}
+                  {sizeOutOfStock && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-full font-bold">
+                      نفذ
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -217,21 +231,38 @@ export default function ProductDetails({
       )}
 
       {/* أزرار الشراء */}
+      {isOutOfStock && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+          <span className="text-red-600 font-bold">غير متوفر حالياً</span>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row gap-4 pt-4">
         <button
           type="button"
           onClick={handleAddToCart}
-          className="flex-1 py-4 bg-white text-black border-2 border-black rounded-2xl font-bold text-lg hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-2"
+          disabled={isOutOfStock}
+          className={[
+            "flex-1 py-4 border-2 rounded-2xl font-bold text-lg transition shadow-lg flex items-center justify-center gap-2",
+            isOutOfStock
+              ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
+              : "bg-white text-black border-black hover:bg-gray-100",
+          ].join(" ")}
         >
           <i className="fas fa-cart-plus text-sm"></i>
-          <span>أضف للسلة</span>
+          <span>{isOutOfStock ? "غير متوفر" : "أضف للسلة"}</span>
         </button>
         <button
           type="button"
           onClick={handleBuyNow}
-          className="flex-1 py-4 bg-black text-white rounded-2xl font-bold text-lg hover:bg-gray-800 transition shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
+          disabled={isOutOfStock}
+          className={[
+            "flex-1 py-4 rounded-2xl font-bold text-lg transition shadow-xl flex items-center justify-center gap-2",
+            isOutOfStock
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-black text-white hover:bg-gray-800 transform hover:-translate-y-1",
+          ].join(" ")}
         >
-          <span>شراء الآن</span>
+          <span>{isOutOfStock ? "غير متوفر" : "شراء الآن"}</span>
           <i className="fas fa-shopping-bag text-sm"></i>
         </button>
       </div>
