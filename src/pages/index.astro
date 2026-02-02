@@ -75,7 +75,7 @@ const products = await Promise.all(
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
         <div class="text-center md:text-right z-10 space-y-6" data-aos="fade-right">
-          <span class="inline-block py-1 px-3 rounded-full bg-white/60 border border-white/50 text-xs font-semibold tracking-wider text-gray-500 uppercase backdrop-blur-sm mb-2 mt-10">
+          <span class="inline-block py-1 px-3 rounded-full bg-white/90 md:bg-white/60 border border-white/50 text-xs font-semibold tracking-wider text-gray-500 uppercase md:backdrop-blur-sm mb-2 mt-10">
             تشكيلة جديدة 2025
           </span>
 
@@ -146,11 +146,11 @@ const products = await Promise.all(
                   height="800"
                 />
                 {product.outofstock ? (
-                  <div class="absolute top-4 right-4 bg-red-500 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm">
+                  <div class="absolute top-4 right-4 bg-red-500 md:backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm">
                     غير متوفر
                   </div>
                 ) : index === 0 && (
-                  <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-black shadow-sm">
+                  <div class="absolute top-4 right-4 bg-white/95 md:bg-white/80 md:backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-black shadow-sm">
                     جديد
                   </div>
                 )}
@@ -217,7 +217,7 @@ const products = await Promise.all(
   </section>
 
   {/* Review Modal */}
-  <div id="reviewModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-label="عارض صور الآراء">
+  <div id="reviewModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 md:bg-black/80 md:backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-label="عارض صور الآراء">
     <div class="relative max-w-4xl max-h-[90vh] w-full">
       <button id="closeReview" class="absolute bottom-4 right-4 md:bottom-auto md:right-auto md:-top-12 md:left-1/2 md:-translate-x-1/2 lg:left-auto lg:translate-x-0 lg:-left-12 w-10 h-10 rounded-full bg-black/70 md:bg-white/20 text-white flex items-center justify-center hover:bg-black/90 md:hover:bg-white/40 transition z-10" aria-label="إغلاق">
         <Icon name="times" class="text-lg" />

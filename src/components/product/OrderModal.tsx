@@ -74,7 +74,7 @@ export default function OrderModal({
 
   return (
     <div
-      className="fixed inset-0 z-100  flex items-center justify-center  bg-gray-900/60 backdrop-blur-sm transition-all duration-300 p-4 md:p-6"
+      className="fixed inset-0 z-100  flex items-center justify-center  bg-gray-900/80 md:bg-gray-900/60 md:backdrop-blur-sm transition-all duration-300 p-4 md:p-6"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
@@ -86,7 +86,7 @@ export default function OrderModal({
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 left-4 w-9 h-9 rounded-full bg-gray-100/50 hover:bg-red-50 hover:text-red-500 text-gray-500 flex items-center justify-center transition-all duration-300 z-10 backdrop-blur-sm"
+          className="absolute top-4 left-4 w-9 h-9 rounded-full bg-gray-100/80 md:bg-gray-100/50 hover:bg-red-50 hover:text-red-500 text-gray-500 flex items-center justify-center transition-all duration-300 z-10 md:backdrop-blur-sm"
           aria-label="إغلاق"
         >
           <Close  className="w-4 h-4" />

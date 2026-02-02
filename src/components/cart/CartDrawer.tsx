@@ -72,7 +72,7 @@ export default function CartDrawer({ onCheckout }: Props) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90]"
+        className="fixed inset-0 bg-black/70 md:bg-black/50 md:backdrop-blur-sm z-[90]"
         onClick={() => setIsCartOpen(false)}
       />
 

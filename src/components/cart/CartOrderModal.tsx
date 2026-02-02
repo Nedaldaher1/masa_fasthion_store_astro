@@ -104,7 +104,7 @@ ${itemsText}${deliveryText}
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 md:bg-black/60 md:backdrop-blur-sm"
         onClick={onClose}
       />
 

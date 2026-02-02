@@ -52,7 +52,7 @@ export default function ProductGallery({
         />
 
         {/* بادج */}
-        <div className="absolute top-6 right-6 bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold text-black shadow-sm">
+        <div className="absolute top-6 right-6 bg-white/95 md:bg-white/80 md:backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold text-black shadow-sm">
           الأكثر مبيعاً
         </div>
       </div>

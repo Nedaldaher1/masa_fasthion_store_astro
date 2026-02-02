@@ -1,7 +1,8 @@
 ---
 // src/layouts/SeoLayout.astro
 import '../styles/global.css';
-// AOS CSS will be loaded dynamically to avoid render-blocking
+// AOS CSS loaded locally for better performance (no CDN)
+import 'aos/dist/aos.css';
 import Icon from '../components/Icon.astro';
 import Navbar from "../components/ui/navbar";
 import CartWrapper from "../components/cart/CartWrapper";
@@ -203,20 +204,25 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
     </CartWrapper>
 
     <script>
-      // Load AOS CSS dynamically to avoid render-blocking
+      // Load AOS dynamically - CSS is bundled locally via import
       const loadAOS = () => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/aos@2.3.4/dist/aos.css';
-        document.head.appendChild(link);
-        
-        import('aos').then((AOS) => {
-          AOS.default.init({
-            once: true,
-            duration: 600,
-            easing: 'ease-out'
+        // Only load AOS on non-mobile devices for better performance
+        if (window.innerWidth >= 768) {
+          import('aos').then((AOS) => {
+            AOS.default.init({
+              once: true,
+              duration: 600,
+              easing: 'ease-out',
+              disable: 'mobile' // Disable on mobile
+            });
           });
-        });
+        } else {
+          // On mobile, just show elements without animation
+          document.querySelectorAll('[data-aos]').forEach(el => {
+            el.removeAttribute('data-aos');
+            el.removeAttribute('data-aos-delay');
+          });
+        }
       };
       
       if (document.readyState === 'complete') {
