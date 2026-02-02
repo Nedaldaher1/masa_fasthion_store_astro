@@ -1,7 +1,7 @@
 ---
 // src/layouts/SeoLayout.astro
 import '../styles/global.css';
-import 'aos/dist/aos.css'; 
+// AOS CSS will be loaded dynamically to avoid render-blocking
 import Icon from '../components/Icon.astro';
 import Navbar from "../components/ui/navbar";
 import CartWrapper from "../components/cart/CartWrapper";
@@ -12,6 +12,7 @@ export interface Props {
   canonical?: string;
   image?: string;
   noindex?: boolean;
+  preloadImage?: string;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   canonical = "https://example.com",
   image = "https://example.com/og/masa-fashion.jpg",
   noindex = false,
+  preloadImage,
 } = Astro.props;
 
 const siteName = "ماسة فيشن";
@@ -71,6 +73,15 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
     <link rel="icon" href="/favicon-16x16.png" sizes="16x16">
     <link rel="icon" href="/favicon.ico" sizes="any">
 
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/fonts/tajawal-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/tajawal-arabic-700.woff2" as="font" type="font/woff2" crossorigin>
+
+    {/* Preload LCP image if provided */}
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+    )}
+
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     {noindex
@@ -101,36 +112,11 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
     <meta name="facebook-domain-verification" content="yf5h2jq7i4hsvp7uuradfhiyuovob1" />
     <meta name="theme-color" content="#111111" />
 
-    {PIXEL_ID && (
-      <script is:inline define:vars={{ pixelId: PIXEL_ID }}>
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', pixelId);
-        fbq('track', 'PageView');
-      </script>
-    )}
-    {PIXEL_ID && (
-      <noscript>
-        <img
-          height="1"
-          width="1"
-          style="display:none"
-          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
-          alt=""
-        />
-      </noscript>
-    )}
-  </head>
+    </head>
 
   <!-- ✅ نمرر مسار الخلفية كـ CSS variable لضمان عدم كسره -->
   <body style={`--ramadan-pattern-url: url('${overlayUrl}')`}>
-    <CartWrapper client:load whatsappPhone={whatsappPhone}>
+    <CartWrapper client:idle whatsappPhone={whatsappPhone}>
       <header>
         <Navbar client:idle />
       </header>
@@ -138,11 +124,19 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
       <main>
         <img class="ramadan-lantern ramadan-lantern--left"
              src={lanternUrl}
-             alt="Ramadan Lantern" />
+             alt="Ramadan Lantern"
+             width="150"
+             height="300"
+             loading="lazy"
+             decoding="async" />
 
         <img class="ramadan-lantern ramadan-lantern--right"
              src={lanternUrl}
-             alt="Ramadan Lantern" />
+             alt="Ramadan Lantern"
+             width="150"
+             height="300"
+             loading="lazy"
+             decoding="async" />
 
         <div class="ramadan-overlay-left" aria-hidden="true"></div>
         <div class="ramadan-overlay-right" aria-hidden="true"></div>
@@ -178,8 +172,56 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
     </CartWrapper>
 
     <script>
-      import AOS from 'aos';
-      AOS.init()
+      // Load AOS CSS dynamically to avoid render-blocking
+      const loadAOS = () => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/aos@2.3.4/dist/aos.css';
+        document.head.appendChild(link);
+        
+        import('aos').then((AOS) => {
+          AOS.default.init({
+            once: true,
+            duration: 600,
+            easing: 'ease-out'
+          });
+        });
+      };
+      
+      if (document.readyState === 'complete') {
+        loadAOS();
+      } else {
+        window.addEventListener('load', loadAOS);
+      }
     </script>
+
+    {/* Meta Pixel - Delayed loading for better performance */}
+    {PIXEL_ID && (
+      <script is:inline define:vars={{ pixelId: PIXEL_ID }}>
+        setTimeout(function() {
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', pixelId);
+          fbq('track', 'PageView');
+        }, 3000);
+      </script>
+    )}
+    {PIXEL_ID && (
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style="display:none"
+          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
+          alt=""
+        />
+      </noscript>
+    )}
   </body>
 </html>

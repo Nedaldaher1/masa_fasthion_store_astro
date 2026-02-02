@@ -1,5 +1,25 @@
 {
   "name": "masafasthion",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-01-31"
+  "compatibility_date": "2026-01-31",
+  "headers": {
+    "/_astro/*": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    },
+    "/fonts/*": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    },
+    "/*.webp": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    },
+    "/*.png": {
+      "Cache-Control": "public, max-age=2592000"
+    },
+    "/*.jpg": {
+      "Cache-Control": "public, max-age=2592000"
+    },
+    "/*.svg": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    }
+  }
 }

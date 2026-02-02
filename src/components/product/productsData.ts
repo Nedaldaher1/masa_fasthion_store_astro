@@ -19,7 +19,7 @@ export const productsData: Record<string, Product> = {
 
   product_3: {
     name: "عباية مخمل شتوي فاخر ",
-    nameItemInStorage:"عباية مخمل ابو الحط الجديد",
+    nameItemInStorage:"عباية مخمل ابو الخط الجديد",
     description:
       "نوفر ضمان ما بعد البيع لراحتك، مع خدمة توصيل سريعة إلى جميع المحافظات، لتصلك العباية بكل أمان وسهولة.",
     price: "15.00 د.أ",
