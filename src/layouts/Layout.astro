@@ -6,6 +6,7 @@ import 'aos/dist/aos.css';
 import Icon from '../components/Icon.astro';
 import Navbar from "../components/ui/navbar";
 import CartWrapper from "../components/cart/CartWrapper";
+import PostHog from "../components/posthog.astro";
 
 export interface Props {
   title?: string;
@@ -143,6 +144,9 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
 
     <meta name="facebook-domain-verification" content="yf5h2jq7i4hsvp7uuradfhiyuovob1" />
     <meta name="theme-color" content="#111111" />
+
+    {/* PostHog Analytics - Delayed loading for better performance */}
+    <PostHog />
 
     </head>
 

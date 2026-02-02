@@ -195,10 +195,8 @@ body > *{
 
 /* Responsive - Mobile Performance Optimizations */
 @media (max-width: 768px){
-  /* Smaller lanterns on mobile */
-  .ramadan-lantern{
-    width: 90px;
-  }
+  /* Hide lanterns on mobile for better performance */
+
 
   /* Disable blob animations on mobile */
   .blob {
