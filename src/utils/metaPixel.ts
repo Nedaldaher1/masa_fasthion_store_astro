@@ -115,6 +115,9 @@ export function trackPurchase(params: {
   items: Array<{
     productId: string;
     productName: string;
+    nameItemInStorage: string;
+    category: string;
+    colorName: string;
     price: number;
     quantity: number;
   }>;
@@ -127,6 +130,9 @@ export function trackPurchase(params: {
       id: item.productId,
       quantity: item.quantity,
       item_price: item.price,
+      item_name: item.nameItemInStorage,
+      item_category: item.category,
+      item_variant: item.colorName,
     })),
     content_type: "product",
     value: params.totalValue,

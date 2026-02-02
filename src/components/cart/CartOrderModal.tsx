@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCart, type CartItem } from "./CartContext";
 import { Close } from "../../icons/react/close";
 import { trackPurchase } from "../../utils/metaPixel";
+import { productsData } from "../product/productsData";
 
 type Props = {
   open: boolean;
@@ -84,6 +85,9 @@ ${itemsText}${deliveryText}
       items: items.map(item => ({
         productId: item.productId,
         productName: item.productName,
+        nameItemInStorage: item.nameItemInStorage,
+        category: productsData[item.productId]?.category || "عبايات",
+        colorName: item.colorName,
         price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
         quantity: item.quantity,
       })),
