@@ -77,10 +77,7 @@ ${itemsText}${deliveryText}
 ━━━━━━━━━━━━━━
     `.trim();
 
-    const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
-
-    // تتبع Purchase في Meta Pixel
+    // ✅ تتبع Purchase في Meta Pixel أولاً (قبل فتح الواتساب)
     trackPurchase({
       items: items.map(item => ({
         productId: item.productId,
@@ -94,6 +91,10 @@ ${itemsText}${deliveryText}
       totalValue: totalPrice,
       numItems: totalQuantity,
     });
+
+    // فتح الواتساب بعد إرسال الحدث
+    const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
 
     onSubmitOrder?.();
     clearCart();

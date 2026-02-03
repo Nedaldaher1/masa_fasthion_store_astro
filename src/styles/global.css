@@ -171,6 +171,8 @@ body > *{
 
 .ramadan-lantern--left{
   left: 12px;
+  /* SIZE IMAGE */
+  
 }
 
 .ramadan-lantern--right{
@@ -197,6 +199,10 @@ body > *{
 @media (max-width: 768px){
   /* Hide lanterns on mobile for better performance */
 
+  /* SIZE IMAGE LESS ramdan */
+  .ramadan-lantern {
+    width: 80px;
+  }
 
   /* Disable blob animations on mobile */
   .blob {
