@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { CartProvider, useCart } from "./CartContext";
 import CartDrawer from "./CartDrawer";
-import CartOrderModal from "./CartOrderModal";
 
 type Props = {
   children: React.ReactNode;
   whatsappPhone: string;
 };
 
-function CartManager({ whatsappPhone }: { whatsappPhone: string }) {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { setIsCartOpen, items } = useCart();
+function CartManager() {
+  const { setIsCartOpen } = useCart();
 
   // استمع لأحداث فتح السلة
   useEffect(() => {
@@ -19,11 +17,7 @@ function CartManager({ whatsappPhone }: { whatsappPhone: string }) {
     };
 
     const handleCartUpdated = () => {
-      // تحديث السلة من localStorage
-      const saved = localStorage.getItem("masa_fashion_cart");
-      if (saved) {
-        // السلة ستُحدث تلقائياً عبر useEffect في CartContext
-      }
+      // السلة ستُحدث تلقائياً عبر useEffect في CartContext
     };
 
     window.addEventListener("open-cart", handleOpenCart);
@@ -35,23 +29,14 @@ function CartManager({ whatsappPhone }: { whatsappPhone: string }) {
     };
   }, [setIsCartOpen]);
 
-  return (
-    <>
-      <CartDrawer onCheckout={() => setIsCheckoutOpen(true)} />
-      <CartOrderModal
-        open={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        whatsappPhone={whatsappPhone}
-      />
-    </>
-  );
+  return <CartDrawer />;
 }
 
-export default function CartWrapper({ children, whatsappPhone }: Props) {
+export default function CartWrapper({ children }: Props) {
   return (
     <CartProvider>
       {children}
-      <CartManager whatsappPhone={whatsappPhone} />
+      <CartManager />
     </CartProvider>
   );
 }

@@ -9,6 +9,8 @@
  * - AddToCart: عند إضافة منتج للسلة
  * - InitiateCheckout: عند فتح السلة/بدء الشراء
  * - Purchase: عند إتمام الطلب
+ * 
+ * ⚠️ ملاحظة: يتم تعطيل التتبع في بيئة التطوير (localhost)
  */
 
 // التحقق من وجود fbq في window
@@ -22,16 +24,40 @@ declare global {
 const CURRENCY = "JOD";
 
 /**
- * دالة مساعدة آمنة لتتبع الأحداث
+ * التحقق من بيئة التطوير
+ * @returns true إذا كنا في بيئة التطوير (localhost)
  */
-export function trackEvent(eventName: string, params?: Record<string, any>) {
+function isDevelopment(): boolean {
+  if (typeof window === "undefined") return false;
+  const hostname = window.location.hostname;
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname.startsWith("192.168.");
+}
+
+/**
+ * دالة مساعدة آمنة لتتبع الأحداث
+ * @param eventName اسم الحدث
+ * @param params معلمات الحدث
+ * @param eventId معرف فريد للتخلص من التكرار (اختياري)
+ */
+export function trackEvent(eventName: string, params?: Record<string, any>, eventId?: string) {
   if (typeof window === "undefined") return;
   if (typeof window.fbq !== "function") return;
   
+  // ⛔ تعطيل التتبع في بيئة التطوير
+  if (isDevelopment()) {
+    console.log(`[Meta Pixel - DEV] Skipped: ${eventName}`, params);
+    return;
+  }
+  
   try {
-    window.fbq("track", eventName, params ?? {});
+    // إذا تم توفير eventId، نضيفه للحدث
+    if (eventId) {
+      window.fbq("track", eventName, params ?? {}, { eventID: eventId });
+    } else {
+      window.fbq("track", eventName, params ?? {});
+    }
     // يمكن تفعيل السطر التالي للتصحيح
-    // console.log(`[Meta Pixel] ${eventName}`, params);
+    // console.log(`[Meta Pixel] ${eventName}`, params, eventId);
   } catch (error) {
     console.error(`[Meta Pixel] Error tracking ${eventName}:`, error);
   }
@@ -45,6 +71,7 @@ export function trackViewContent(params: {
   productName: string;
   price: number;
   category?: string;
+  eventId?: string;
 }) {
   trackEvent("ViewContent", {
     content_ids: [params.productId],
@@ -53,7 +80,7 @@ export function trackViewContent(params: {
     content_category: params.category || "عبايات",
     value: params.price,
     currency: CURRENCY,
-  });
+  }, params.eventId);
 }
 
 /**
@@ -66,6 +93,7 @@ export function trackAddToCart(params: {
   quantity?: number;
   colorName?: string;
   size?: string;
+  eventId?: string;
 }) {
   trackEvent("AddToCart", {
     content_ids: [params.productId],
@@ -78,7 +106,7 @@ export function trackAddToCart(params: {
       quantity: params.quantity || 1,
       item_price: params.price,
     }],
-  });
+  }, params.eventId);
 }
 
 /**
@@ -93,6 +121,7 @@ export function trackInitiateCheckout(params: {
   }>;
   totalValue: number;
   numItems: number;
+  eventId?: string;
 }) {
   trackEvent("InitiateCheckout", {
     content_ids: params.items.map(item => item.productId),
@@ -105,7 +134,7 @@ export function trackInitiateCheckout(params: {
     value: params.totalValue,
     currency: CURRENCY,
     num_items: params.numItems,
-  });
+  }, params.eventId);
 }
 
 /**
@@ -123,6 +152,7 @@ export function trackPurchase(params: {
   }>;
   totalValue: number;
   numItems: number;
+  eventId?: string;
 }) {
   trackEvent("Purchase", {
     content_ids: params.items.map(item => item.productId),
@@ -138,5 +168,5 @@ export function trackPurchase(params: {
     value: params.totalValue,
     currency: CURRENCY,
     num_items: params.numItems,
-  });
+  }, params.eventId);
 }

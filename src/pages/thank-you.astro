@@ -1,0 +1,178 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = false;
+---
+
+<Layout title="تم استلام طلبك - ماسة فاشين" noindex={true}>
+  <div class="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center">
+    <div class="max-w-lg mx-auto text-center">
+      
+      <!-- Success Icon -->
+      <div class="mb-8">
+        <div class="w-24 h-24 mx-auto rounded-full bg-green-100 flex items-center justify-center animate-bounce-slow">
+          <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Message -->
+      <div class="glass-card rounded-3xl p-8 mb-6">
+        <h1 class="text-3xl font-bold text-textDark mb-4">
+          تم استلام طلبك بنجاح! 🎉
+        </h1>
+        
+        <p class="text-textLight text-lg mb-6">
+          شكراً لثقتك بماسة فاشين. سنتواصل معك قريباً لتأكيد الطلب.
+        </p>
+
+        <div class="bg-green-50 rounded-2xl p-4 mb-6 border border-green-100">
+          <div class="flex items-center justify-center gap-2 text-green-700">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.553 4.122 1.52 5.857L0 24l6.335-1.652C8.046 23.447 9.977 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.82 0-3.543-.475-5.04-1.306l-.36-.213-3.747.98.998-3.648-.235-.374A9.93 9.93 0 012 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
+            </svg>
+            <span class="font-bold">ستصلك رسالة تأكيد على واتساب</span>
+          </div>
+        </div>
+
+        <!-- What happens next -->
+        <div class="text-right space-y-3 mb-6">
+          <h3 class="font-bold text-textDark mb-3">ماذا سيحدث الآن؟</h3>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-green-600 text-white text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
+            <p class="text-textLight text-sm"><strong class="text-textDark">خلال ساعة:</strong> ستصلك رسالة واتساب لتأكيد التفاصيل</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-black text-white text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
+            <p class="text-textLight text-sm"><strong class="text-textDark">خلال يوم عمل:</strong> نجهز طلبك ونشحنه</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-black text-white text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
+            <p class="text-textLight text-sm"><strong class="text-textDark">عند التوصيل:</strong> تفتحي الطلب، تتأكدي، وبعدين تدفعي</p>
+          </div>
+        </div>
+
+        <!-- زر واتساب للتواصل -->
+        <a 
+          href="https://api.whatsapp.com/send?phone=962797514430&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%B7%D9%84%D8%A8%D9%8A" 
+          target="_blank"
+          class="inline-flex items-center justify-center gap-2 w-full py-3 mb-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 transition shadow-lg"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          </svg>
+          <span>تواصلي معنا على واتساب</span>
+        </a>
+        <p class="text-xs text-textLight text-center mb-4">(للاستفسار أو تعديل الطلب)</p>
+
+        <!-- CTA Button -->
+        <a 
+          href="/" 
+          class="inline-flex items-center justify-center gap-2 w-full py-4 bg-black text-white rounded-2xl font-bold text-lg hover:bg-gray-800 transition shadow-xl"
+        >
+          <span>العودة للتسوق</span>
+          <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="flex justify-center gap-6 text-xs text-textLight">
+        <div class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>ضمان الجودة</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>خدمات ما بعد البيع</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span>دفع عند الاستلام</span>
+        </div>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="mt-6 text-center text-sm text-textLight">
+        <p>سيتم تحويلك للصفحة الرئيسية خلال <span id="countdown" class="font-bold text-black">60</span> ثانية</p>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    @keyframes bounce-slow {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    .animate-bounce-slow {
+      animation: bounce-slow 2s ease-in-out infinite;
+    }
+  </style>
+
+  <script>
+    // Check if user came from a completed purchase
+    const purchaseCompleted = sessionStorage.getItem('purchaseCompleted');
+    
+    if (!purchaseCompleted) {
+      // Redirect to home if not from a purchase
+      window.location.href = '/';
+    } else {
+      // Clear the flag so page can't be accessed again
+      sessionStorage.removeItem('purchaseCompleted');
+    }
+
+    // Play success sound on page load
+    function playSuccessSound() {
+      try {
+        const audio = new Audio('/sounds/success.mp3');
+        audio.volume = 0.4; // Medium volume
+        audio.play().catch(() => {
+          // Silent fail if audio playback blocked
+          console.log('Audio playback blocked');
+        });
+      } catch (e) {
+        // Silent fail if audio not supported
+        console.log('Audio not supported');
+      }
+    }
+
+    // Countdown timer for redirect
+    let countdown = 60;
+    const countdownElement = document.getElementById('countdown');
+    
+    function updateCountdown() {
+      if (countdownElement) {
+        countdownElement.textContent = countdown.toString();
+      }
+      
+      if (countdown <= 0) {
+        window.location.href = '/';
+      } else {
+        countdown--;
+        setTimeout(updateCountdown, 1000);
+      }
+    }
+
+    // Play sound and start countdown when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Small delay for better UX
+      setTimeout(playSuccessSound, 300);
+      // Start countdown
+      updateCountdown();
+    });
+  </script>
+</Layout>

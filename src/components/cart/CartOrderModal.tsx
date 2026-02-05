@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCart, type CartItem } from "./CartContext";
 import { Close } from "../../icons/react/close";
 import { trackPurchase } from "../../utils/metaPixel";
+import { generateEventId, serverTrackPurchase, sendWhatsAppOrderNotification } from "../../utils/backendApi";
 import { productsData } from "../product/productsData";
 
 type Props = {
@@ -58,7 +59,7 @@ export default function CartOrderModal({ open, onClose, whatsappPhone, onSubmitO
     const deliveryText = hasDiscount ? `\n\n*أجور التوصيل: 2.00 د.أ*` : "";
 
     const message = `
-*طلب جديد من ماسة فيشن* 🛍️
+*طلب جديد من ماسة فاشين* 🛍️
 
 *بيانات العميل:*
 ━━━━━━━━━━━━━━
@@ -77,19 +78,59 @@ ${itemsText}${deliveryText}
 ━━━━━━━━━━━━━━
     `.trim();
 
-    // ✅ تتبع Purchase في Meta Pixel أولاً (قبل فتح الواتساب)
+    // توليد Event ID للتخلص من التكرار
+    const eventId = generateEventId();
+    
+    // تجهيز بيانات المنتجات للتتبع
+    const trackingItems = items.map(item => ({
+      productId: item.productId,
+      productName: item.productName,
+      nameItemInStorage: item.nameItemInStorage,
+      category: productsData[item.productId]?.category || "عبايات",
+      colorName: item.colorName,
+      price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+      quantity: item.quantity,
+    }));
+
+    // ✅ تتبع Purchase في Meta Pixel أولاً (Client-side مع eventId)
     trackPurchase({
-      items: items.map(item => ({
-        productId: item.productId,
-        productName: item.productName,
-        nameItemInStorage: item.nameItemInStorage,
-        category: productsData[item.productId]?.category || "عبايات",
-        colorName: item.colorName,
-        price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
-        quantity: item.quantity,
-      })),
+      items: trackingItems,
       totalValue: totalPrice,
       numItems: totalQuantity,
+      eventId,
+    });
+
+    // ✅ تتبع Purchase من السيرفر (Server-side)
+    serverTrackPurchase({
+      eventId,
+      items: trackingItems,
+      totalValue: totalPrice,
+      numItems: totalQuantity,
+      customerData: {
+        name,
+        phone,
+        governorate,
+        address,
+      },
+    });
+
+    // ✅ إرسال إشعار الطلب عبر WhatsApp Cloud API (Server-side)
+    sendWhatsAppOrderNotification({
+      customerName: name,
+      customerPhone: phone,
+      governorate,
+      address,
+      notes,
+      items: items.map(item => ({
+        nameItemInStorage: item.nameItemInStorage,
+        colorName: item.colorName,
+        size: item.size || "غير محدد",
+        quantity: item.quantity,
+        price: hasDiscount 
+          ? (parseFloat(item.price.replace(/[^\d.]/g, "")) || 0) - 2 
+          : parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+      })),
+      totalPrice,
     });
 
     // فتح الواتساب بعد إرسال الحدث

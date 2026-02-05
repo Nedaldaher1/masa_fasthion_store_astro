@@ -5,7 +5,9 @@ import { productsData } from '../components/product/productsData';
 import { Image, getImage } from 'astro:assets';
 import { productImages, getProductImage } from '../components/product/productImages';
 
-const title = "ماسة فيشن | Masa Fashion";
+export const prerender = true;
+
+const title = "ماسة فاشين | Masa Fashion";
 const description = "متجر إلكتروني لبيع عبايات المخمل عالية الجودة في الأردن - عمان";
 const canonical = "https://example.com";
 const image = "https://example.com/og/masa-fashion.jpg";
@@ -74,9 +76,9 @@ const products = await Promise.all(
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-        <div class="text-center md:text-right z-10 space-y-6" data-aos="fade-right">
+        <div class="text-center md:text-right z-10 space-y-6">
           <span class="inline-block py-1 px-3 rounded-full bg-white/90 md:bg-white/60 border border-white/50 text-xs font-semibold tracking-wider text-gray-500 uppercase md:backdrop-blur-sm mb-2 mt-10">
-            تشكيلة جديدة 2025
+            تشكيلة جديدة 2026
           </span>
 
           <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-tight" style="color: var(--textDark);">
@@ -96,12 +98,12 @@ const products = await Promise.all(
           </div>
         </div>
 
-        <div class="relative z-10 mt-10 md:mt-0" data-aos="zoom-in">
+        <div class="relative z-10 mt-10 md:mt-0">
           <div class="glass-card rounded-[2.5rem] p-4 hover:rotate-0 transition-transform duration-700">
             <div class="relative overflow-hidden rounded-[2rem] bg-gray-50/50">
               <Image
                 src={heroImage}
-                alt="عارضة أزياء ترتدي عباية من ماسة فيشن"
+                alt="عارضة أزياء ترتدي عباية من ماسة فاشين"
                 class="object-contain w-full h-auto max-h-[600px] hover:scale-105 transition-transform duration-1000"
                 loading="eager"
                 decoding="async"
@@ -123,7 +125,7 @@ const products = await Promise.all(
   {/* PRODUCTS */}
   <section id="products" class="py-24 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16" data-aos="fade-up">
+      <div class="text-center mb-16">
         <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--textDark);">الأكثر مبيعاً</h2>
         <p class="max-w-2xl mx-auto text-lg" style="color: var(--textLight);">
           اخترنا لك بعناية أفضل القطع التي نالت إعجاب عملائنا.
@@ -132,7 +134,7 @@ const products = await Promise.all(
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {products.map((product, index) => (
-          <div data-aos="fade-up" data-aos-delay={index * 100}>
+          <div class="product-card-animate" style={`animation-delay: ${index * 100}ms`}>
             <a href={`/product/${product.id}`} class="glass-card rounded-3xl p-4 h-full flex flex-col group cursor-pointer">
               <div class="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-gray-100">
                 <img
@@ -177,7 +179,7 @@ const products = await Promise.all(
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[100%] bg-gradient-to-b from-transparent via-white/40 to-transparent pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-16" data-aos="fade-up">
+      <div class="text-center mb-16">
         <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--textDark);">ماذا يقول عملاؤنا؟</h2>
         <p class="max-w-2xl mx-auto text-lg" style="color: var(--textLight);">آراء حقيقية من عملائنا الكرام</p>
       </div>
@@ -190,8 +192,6 @@ const products = await Promise.all(
               class="glass-card rounded-2xl overflow-hidden group cursor-pointer"
               data-review-index={i}
               aria-label={`فتح صورة رأي عميل رقم ${i + 1}`}
-              data-aos="zoom-in"
-              data-aos-delay={i * 50}
             >
               <div class="relative aspect-square overflow-hidden">
                 <Image

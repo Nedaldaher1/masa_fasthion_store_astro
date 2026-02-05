@@ -2,12 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { useCart } from "./CartContext";
 import { Close } from "../../icons/react/close";
 import { trackInitiateCheckout } from "../../utils/metaPixel";
+import { generateEventId, serverTrackInitiateCheckout } from "../../utils/backendApi";
 
-type Props = {
-  onCheckout: () => void;
-};
-
-export default function CartDrawer({ onCheckout }: Props) {
+export default function CartDrawer() {
   const {
     items,
     removeItem,
@@ -23,16 +20,30 @@ export default function CartDrawer({ onCheckout }: Props) {
   
   useEffect(() => {
     if (isCartOpen && items.length > 0 && !hasTrackedCheckout.current) {
+      const eventId = generateEventId();
+      const trackingItems = items.map(item => ({
+        productId: item.productId,
+        productName: item.productName,
+        price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+        quantity: item.quantity,
+      }));
+      
+      // Client-side tracking
       trackInitiateCheckout({
-        items: items.map(item => ({
-          productId: item.productId,
-          productName: item.productName,
-          price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
-          quantity: item.quantity,
-        })),
+        items: trackingItems,
+        totalValue: totalPrice,
+        numItems: totalItems,
+        eventId,
+      });
+      
+      // Server-side tracking
+      serverTrackInitiateCheckout({
+        eventId,
+        items: trackingItems,
         totalValue: totalPrice,
         numItems: totalItems,
       });
+      
       hasTrackedCheckout.current = true;
     }
     if (!isCartOpen) {
@@ -79,7 +90,7 @@ export default function CartDrawer({ onCheckout }: Props) {
       {/* Drawer */}
       <div className="fixed top-0 left-0 h-full w-full max-w-md bg-white shadow-2xl z-[100] flex flex-col animate-slide-in-left">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between  p-4 pt-10 border-b border-gray-200">
           <h2 className="text-xl font-bold text-textDark">
             سلة التسوق ({totalItems})
           </h2>
@@ -197,17 +208,26 @@ export default function CartDrawer({ onCheckout }: Props) {
             )}
             <div className="flex items-center justify-between">
               <span className="text-textLight">المجموع:</span>
-              <span className="text-2xl font-bold text-black">
-                {totalPrice.toFixed(2)} د.أ
-              </span>
+              <div className="text-left">
+                <span className="text-2xl font-bold text-black block">
+                  {totalPrice.toFixed(2)} د.أ
+                </span>
+                <span className="text-xs text-green-600">المبلغ المطلوب عند الاستلام</span>
+              </div>
             </div>
             <button
-              onClick={onCheckout}
+              onClick={() => {
+                setIsCartOpen(false);
+                window.location.href = "/checkout";
+              }}
               className="w-full py-4 bg-black text-white rounded-2xl font-bold text-lg hover:bg-gray-800 transition shadow-xl flex items-center justify-center gap-2"
             >
               <span>إتمام الطلب</span>
               <i className="fas fa-arrow-left text-sm"></i>
             </button>
+            <p className="text-xs text-center text-green-700">
+              ✓ تقدري تفتحي الطلب وتتأكدي قبل الدفع
+            </p>
           </div>
         )}
       </div>

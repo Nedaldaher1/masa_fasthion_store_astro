@@ -5,6 +5,8 @@ import { productsData } from "../../components/product/productsData";
 import { getImage } from 'astro:assets';
 import { getProductImage } from '../../components/product/productImages';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   return Object.keys(productsData).map((id) => ({
     params: { id },
@@ -53,7 +55,7 @@ const optimizedColors = await Promise.all(
 );
 ---
 
-<Layout title={`${product?.name || 'منتج'} - ماسة فيشن`}>
+<Layout title={`${product?.name || 'منتج'} - ماسة فاشين`}>
   <!-- خلفية جمالية -->
   <div class="blob-bg">
     <div class="blob blob-1 rounded-full"></div>
@@ -66,7 +68,7 @@ const optimizedColors = await Promise.all(
     <div class=" rounded-[2.5rem] p-6 md:p-10">
       <!-- React Island -->
       <ProductView 
-        client:visible 
+        client:load 
         productId={id as string} 
         optimizedColors={optimizedColors}
       />

@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { productsData } from "./productsData";
 import ProductGallery from "./ProductGallery";
 import ProductDetails from "./ProductDetails";
+import { trackViewContent } from "../../utils/metaPixel";
+import { generateEventId, serverTrackViewContent } from "../../utils/backendApi";
 
 // نوع الألوان المحسّنة من Astro
 type OptimizedColor = {
@@ -16,8 +18,6 @@ type Props = {
   productId: string;
   optimizedColors?: OptimizedColor[];
 };
-
-const CURRENCY = "JOD";
 
 
 export default function ProductView({ productId, optimizedColors }: Props) {
@@ -42,14 +42,6 @@ export default function ProductView({ productId, optimizedColors }: Props) {
 
   const selectedColor = colors[selectedColorIndex] ?? colors[0];
 
-  // Helper لتتبع البيكسل بأمان
-  const track = useCallback((eventName: string, params?: Record<string, any>) => {
-    if (typeof window === "undefined") return;
-    const fbq = (window as any).fbq;
-    if (typeof fbq !== "function") return;
-    fbq("track", eventName, params ?? {});
-  }, []);
-
   // فور تغيير المنتج
   useEffect(() => {
     setSelectedColorIndex(0);
@@ -58,21 +50,33 @@ export default function ProductView({ productId, optimizedColors }: Props) {
 
   // تحديث عنوان الصفحة
   useEffect(() => {
-    document.title = `${product.name} | ماسة فيشن`;
+    document.title = `${product.name} | ماسة فاشين`;
   }, [product.name]);
 
   // ✅ ViewContent عند عرض صفحة المنتج
   useEffect(() => {
     const price = Number(product.price ?? 0);
+    const eventId = generateEventId();
+    const category = product.category || "عبايات";
 
-    track("ViewContent", {
-      content_ids: [productId],
-      content_name: product.name,
-      content_type: "product",
-      value: price,
-      currency: CURRENCY,
+    // Client-side tracking (مع eventId)
+    trackViewContent({
+      productId,
+      productName: product.name,
+      price,
+      category,
+      eventId,
     });
-  }, [track, productId, product.name, product.price]);
+
+    // Server-side tracking (parallel, don't block)
+    serverTrackViewContent({
+      eventId,
+      productId,
+      productName: product.name,
+      price,
+      category,
+    });
+  }, [productId, product.name, product.price, product.category]);
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">

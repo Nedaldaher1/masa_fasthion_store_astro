@@ -1,8 +1,6 @@
 ---
 // src/layouts/SeoLayout.astro
 import '../styles/global.css';
-// AOS CSS loaded locally for better performance (no CDN)
-import 'aos/dist/aos.css';
 import Icon from '../components/Icon.astro';
 import Navbar from "../components/ui/navbar";
 import CartWrapper from "../components/cart/CartWrapper";
@@ -18,7 +16,7 @@ export interface Props {
 }
 
 const {
-  title = "ماسة فيشن",
+  title = "ماسة فاشين",
   description = "متجر إلكتروني لبيع عبايات المخمل عالية الجودة في الأردن",
   canonical = "https://example.com",
   image = "https://example.com/og/masa-fashion.jpg",
@@ -26,7 +24,7 @@ const {
   preloadImage,
 } = Astro.props;
 
-const siteName = "ماسة فيشن";
+const siteName = "ماسة فاشين";
 const locale = "ar_AR";
 const phone = "+962797514430";
 const whatsappPhone = "962797514430";
@@ -115,6 +113,11 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
       <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
     )}
 
+    {/* Preconnect to external resources */}
+    <link rel="preconnect" href="https://backend.masa-fashion.store" crossorigin>
+    <link rel="preconnect" href="https://us.i.posthog.com" crossorigin>
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     {noindex
@@ -152,27 +155,37 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
 
   <!-- ✅ نمرر مسار الخلفية كـ CSS variable لضمان عدم كسره -->
   <body style={`--ramadan-pattern-url: url('${overlayUrl}')`}>
+    <!-- Trust Strip - شريط الثقة العلوي -->
+    <div class="   trust-strip bg-black text-white text-xs py-2 px-4 text-center fixed top-0 left-0 right-0 z-[200]">
+      <div class="flex items-center justify-center gap-4 md:gap-8 flex-wrap">
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span>الدفع عند الاستلام</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          <span>معاينة قبل الدفع</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          <span>توصيل خلال يوم</span>
+        </div>
+      </div>
+    </div>
+
     <CartWrapper client:idle whatsappPhone={whatsappPhone}>
-      <header>
+      <header class="mt-10">
         <Navbar client:idle />
       </header>
 
       <main>
-        <img class="ramadan-lantern ramadan-lantern--left"
-             src={lanternUrl}
-             alt="Ramadan Lantern"
-             width="150"
-             height="300"
-             loading="lazy"
-             decoding="async" />
-
-        <img class="ramadan-lantern ramadan-lantern--right"
-             src={lanternUrl}
-             alt="Ramadan Lantern"
-             width="150"
-             height="300"
-             loading="lazy"
-             decoding="async" />
 
         <div class="ramadan-overlay-left" aria-hidden="true"></div>
         <div class="ramadan-overlay-right" aria-hidden="true"></div>
@@ -182,58 +195,91 @@ const PIXEL_ID = import.meta.env.PUBLIC_META_PIXEL_ID;
 
       <footer id="footer" class="border-t border-white/40 glass relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-center md:text-right">
-              <a href="/" class="text-2xl font-bold text-textDark mb-2"> ماسة فاشين</a>
-              <p class="text-sm text-textLight">© 2025 جميع الحقوق محفوظة.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            
+            <!-- Logo & Description -->
+            <div class="text-center md:text-right order-1">
+              <a href="/" class="text-2xl font-bold text-textDark mb-2 block">ماسة فاشين</a>
+              <p class="text-sm text-textLight">متجر إلكتروني لبيع العبايات الفاخرة في الأردن</p>
             </div>
 
-            <div class="flex gap-4 space-x-reverse">
-              <a href="https://www.instagram.com/masa.fashion.jo/" target="_blank" rel="noopener"
-                 class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
-                <Icon name="instagram" />
-              </a>
-              <a href="https://api.whatsapp.com/send?phone=%2B962797514430&fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExbXROS0x2d01xelZLSGZGS3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR7uor35_x742VkZ5b5NuuWM389WbIkZDLN2Lx2uNRdkMvX4rbf9zjEUbuPulQ_aem_Lgk_wBuc7Oo5O2ZhMIgsHg"
-                 class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
-                <Icon name="whatsapp" />
-              </a>
-              <a href="https://web.facebook.com/profile.php?id=61581360869698" target="_blank" rel="noopener"
-                 class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
-                <Icon name="facebook" />
-              </a>
+            <!-- Quick Links -->
+            <div class="text-center order-2">
+              <h4 class="font-bold text-textDark mb-3">روابط مفيدة</h4>
+              <div class="space-y-2">
+                <a href="/faq" class="block text-sm text-textLight hover:text-black transition">الأسئلة الشائعة</a>
+                <a href="/return-policy" class="block text-sm text-textLight hover:text-black transition">سياسة الإرجاع والاستبدال</a>
+              </div>
             </div>
+
+            <!-- Contact -->
+            <div class="text-center md:text-left order-3">
+              <h4 class="font-bold text-textDark mb-3">تواصلي معنا</h4>
+              <a 
+                href="https://api.whatsapp.com/send?phone=962797514430" 
+                target="_blank"
+                class="inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-700 transition"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                </svg>
+                <span dir="ltr">+962 0797514430</span>
+              </a>
+              <div class="flex gap-3   justify-center md:justify-end mt-3 bg">
+                <a href="https://www.instagram.com/masa.fashion.jo/"  target="_blank" rel="noopener"
+                   class="w-9 h-9 rounded-full glass flex items-center  justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm">
+                  <Icon name="instagram" />
+                </a>
+                <a href="https://web.facebook.com/profile.php?id=61581360869698" target="_blank" rel="noopener"
+                   class="w-9 h-9 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm">
+                  <Icon name="facebook" />
+                </a>
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="border-t border-gray-200 pt-6 text-center">
+            <p class="text-sm text-textLight">© 2026 ماسة فاشين - جميع الحقوق محفوظة</p>
           </div>
         </div>
       </footer>
     </CartWrapper>
 
     <script>
-      // Load AOS dynamically - CSS is bundled locally via import
-      const loadAOS = () => {
-        // Only load AOS on non-mobile devices for better performance
-        if (window.innerWidth >= 768) {
-          import('aos').then((AOS) => {
-            AOS.default.init({
-              once: true,
-              duration: 600,
-              easing: 'ease-out',
-              disable: 'mobile' // Disable on mobile
-            });
+      // Intersection Observer for product cards animation
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
           });
+        }, {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Observe product cards on page load
+        const observeProducts = () => {
+          document.querySelectorAll('.product-card-animate').forEach(el => {
+            observer.observe(el);
+          });
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', observeProducts);
         } else {
-          // On mobile, just show elements without animation
-          document.querySelectorAll('[data-aos]').forEach(el => {
-            el.removeAttribute('data-aos');
-            el.removeAttribute('data-aos-delay');
-          });
+          observeProducts();
         }
-      };
-      
-      if (document.readyState === 'complete') {
-        loadAOS();
       } else {
-        window.addEventListener('load', loadAOS);
+        // Fallback for browsers without IntersectionObserver
+        document.querySelectorAll('.product-card-animate').forEach(el => {
+          el.classList.add('is-visible');
+        });
       }
+      
     </script>
 
     {/* Meta Pixel - Delayed loading for better performance */}

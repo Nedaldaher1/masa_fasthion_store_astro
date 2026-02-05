@@ -28,5 +28,6 @@ export default defineConfig({
     sitemap(), // ✅ إضافة sitemap
   ],
 
+  output: 'static',
   adapter: cloudflare(),
 });

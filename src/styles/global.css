@@ -150,35 +150,7 @@ body > *{
 
 /* Font faces are defined in Layout.astro for critical CSS inline */
 
-/* ===== Lanterns ===== */
-.ramadan-lantern{
-  position: fixed;
-  width: 150px;
-  z-index: 9999;          /* ✅ فوق كل شيء */
-  pointer-events: none;
-  transform-origin: top center;
-  will-change: transform, opacity;
 
-  --flip: 1;
-  /* Static glow effect instead of animated filter */
-  filter: drop-shadow(0 0 10px rgba(255, 200, 80, 0.4))
-          drop-shadow(0 0 20px rgba(255, 180, 60, 0.3));
-
-  animation:
-    lantern-swing 3s ease-in-out infinite alternate,
-    lantern-glow  2.4s ease-in-out infinite;
-}
-
-.ramadan-lantern--left{
-  left: 12px;
-  /* SIZE IMAGE */
-  
-}
-
-.ramadan-lantern--right{
-  right: 12px;
-  --flip: -1;
-}
 
 @keyframes lantern-swing{
   0%   { transform: rotate(-2deg) scaleX(var(--flip)); }
@@ -199,10 +171,6 @@ body > *{
 @media (max-width: 768px){
   /* Hide lanterns on mobile for better performance */
 
-  /* SIZE IMAGE LESS ramdan */
-  .ramadan-lantern {
-    width: 80px;
-  }
 
   /* Disable blob animations on mobile */
   .blob {
@@ -219,11 +187,37 @@ body > *{
   }
 }
 
+/* Product cards fade-in animation */
+@keyframes productFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card-animate {
+  opacity: 0;
+}
+
+.product-card-animate.is-visible {
+  animation: productFadeIn 0.5s ease-out forwards;
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .ramadan-lantern,
   .blob {
     animation: none;
+  }
+  
+  .product-card-animate.is-visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
   
   html {

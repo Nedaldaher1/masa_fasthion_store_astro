@@ -19,7 +19,6 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "aos": "^2.3.4",
     "astro": "^5.16.6",
     "astro-compress": "^2.3.9",
     "astro-icon": "^1.1.5",
@@ -28,7 +27,6 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@types/aos": "^3.0.7",
     "vite-plugin-svgr": "^4.5.0",
     "wrangler": "^4.61.1"
   }

@@ -1,0 +1,467 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from '../components/Icon.astro';
+
+export const prerender = false;
+
+const GOVERNORATES = [
+  "عمان",
+  "إربد",
+  "الزرقاء",
+  "العقبة",
+  "السلط",
+  "المفرق",
+  "الكرك",
+  "جرش",
+  "مادبا",
+  "عجلون",
+  "معان",
+  "الطفيلة",
+];
+
+const API_URL = import.meta.env.PUBLIC_API_URL || "https://api.masa-fashion.store";
+const API_KEY = import.meta.env.PUBLIC_API_KEY || "";
+---
+
+<Layout title="إتمام الطلب - ماسة فاشين" noindex={true}>
+  <div class="min-h-screen pt-24 pb-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <a href="/" class="inline-flex items-center gap-2 text-gray-600 hover:text-black mb-4 transition">
+          <Icon name="arrow-right" class="text-sm" />
+          <span>العودة للمتجر</span>
+        </a>
+        <h1 class="text-3xl font-bold text-textDark">إتمام الطلب</h1>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="grid grid-cols-3 gap-3 mb-8">
+        <div class="glass-card rounded-xl p-3 text-center">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </div>
+          <p class="text-xs font-bold text-textDark">معاينة عند الاستلام</p>
+          <p class="text-[10px] text-textLight mt-0.5">قبل الدفع</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-3 text-center">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-blue-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </div>
+          <p class="text-xs font-bold text-textDark">ضمان مابعد البيع</p>
+          <p class="text-[10px] text-textLight mt-0.5">خدمات</p>
+        </div>
+        
+        <div class="glass-card rounded-xl p-3 text-center">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-amber-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <p class="text-xs font-bold text-textDark">ضمان الجودة</p>
+          <p class="text-[10px] text-textLight mt-0.5">عيوب مصنعية</p>
+        </div>
+      </div>
+
+      <!-- Empty Cart Message -->
+      <div id="emptyCart" class="hidden text-center py-16">
+        <i class="fas fa-shopping-bag text-6xl text-gray-200 mb-4"></i>
+        <p class="text-textLight text-lg mb-4">السلة فارغة</p>
+        <a href="/" class="inline-block px-6 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition">
+          تصفح المنتجات
+        </a>
+      </div>
+
+      <!-- Checkout Content -->
+      <div id="checkoutContent" class="space-y-6">
+        
+        <!-- Order Summary -->
+        <div class="glass-card rounded-2xl p-6">
+          <h2 class="text-lg font-bold text-textDark mb-4">ملخص الطلب (<span id="itemCount">0</span> منتج)</h2>
+          
+          <div id="cartItems" class="space-y-3 max-h-60 overflow-y-auto mb-4">
+            <!-- Items will be inserted here -->
+          </div>
+
+          <div id="deliveryFee" class="hidden pt-3 border-t border-gray-200 flex justify-between items-center text-sm text-textLight">
+            <span>أجور التوصيل:</span>
+            <span>2.00 د.أ</span>
+          </div>
+
+          <div class="pt-3 border-t border-gray-200 flex justify-between items-center mt-3">
+            <span class="font-bold text-textDark">المجموع الكلي:</span>
+            <span id="totalPrice" class="text-2xl font-bold text-black">0.00 د.أ</span>
+          </div>
+        </div>
+
+        <!-- Customer Info Form -->
+        <form id="checkoutForm" class="glass-card rounded-2xl p-6 space-y-5">
+          <div class="mb-4">
+            <h2 class="text-lg font-bold text-textDark mb-1">بيانات التوصيل</h2>
+            <p class="text-xs text-textLight">نحتاج بياناتك لتوصيل الطلب فقط - لا نشاركها مع أي جهة</p>
+          </div>
+
+          <div>
+            <label for="name" class="block text-sm font-bold text-textDark mb-2">
+              الاسم الكامل *
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition"
+              placeholder="أدخل اسمك الكامل"
+            />
+          </div>
+
+          <div>
+            <label for="phone" class="block text-sm font-bold text-textDark mb-2">
+              رقم الهاتف *
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition text-left"
+              placeholder="07XXXXXXXX"
+              dir="ltr"
+            />
+            <p class="text-xs text-textLight mt-1">للتواصل معك عبر واتساب لتأكيد الطلب</p>
+          </div>
+
+          <div>
+            <label for="governorate" class="block text-sm font-bold text-textDark mb-2">
+              المحافظة *
+            </label>
+            <select
+              id="governorate"
+              name="governorate"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition bg-white"
+            >
+              <option value="">اختر المحافظة</option>
+              {GOVERNORATES.map((gov) => (
+                <option value={gov}>{gov}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label for="address" class="block text-sm font-bold text-textDark mb-2">
+              العنوان التفصيلي *
+            </label>
+            <textarea
+              id="address"
+              name="address"
+              required
+              rows="2"
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none"
+              placeholder="المنطقة، الشارع، رقم البناية..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="notes" class="block text-sm font-bold text-textDark mb-2">
+              ملاحظات إضافية
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows="2"
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition resize-none"
+              placeholder="أي ملاحظات خاصة بالطلب..."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="submitBtn"
+            class="w-full py-4 bg-black text-white rounded-2xl font-bold text-lg hover:bg-gray-800 transition shadow-xl flex flex-col items-center justify-center gap-1"
+          >
+            <span class="flex items-center gap-2">
+              <span>أرسلي الطلب الآن</span>
+              <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </span>
+            <span class="text-xs font-normal opacity-80">(الدفع عند الاستلام)</span>
+          </button>
+
+          <!-- Reassurance Text -->
+          <div class="mt-4 pt-4 border-t border-gray-100 space-y-2">
+            <div class="flex items-center gap-2 text-xs text-green-700">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <p>لن تدفعي شيء الآن</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-green-700">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <p>ستصلك رسالة واتساب خلال ساعة لتأكيد الطلب</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-green-700">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <p>يحق لك معاينة القطعة قبل الدفع</p>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ API_URL, API_KEY }}>
+    const CART_STORAGE_KEY = "masa_fashion_cart";
+    
+    // DOM Elements
+    const emptyCart = document.getElementById("emptyCart");
+    const checkoutContent = document.getElementById("checkoutContent");
+    const cartItemsContainer = document.getElementById("cartItems");
+    const itemCountEl = document.getElementById("itemCount");
+    const totalPriceEl = document.getElementById("totalPrice");
+    const deliveryFeeEl = document.getElementById("deliveryFee");
+    const checkoutForm = document.getElementById("checkoutForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Load cart from localStorage
+    function loadCart() {
+      try {
+        const saved = localStorage.getItem(CART_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    // Calculate totals
+    function calculateTotals(items) {
+      const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+      const hasDiscount = totalQuantity > 1;
+      
+      const itemsTotal = items.reduce((sum, item) => {
+        const price = parseFloat(item.price.replace(/[^\d.]/g, "")) || 0;
+        const discountedPrice = hasDiscount ? price - 2 : price;
+        return sum + discountedPrice * item.quantity;
+      }, 0);
+      
+      const deliveryFee = hasDiscount ? 2 : 0;
+      return {
+        totalQuantity,
+        hasDiscount,
+        itemsTotal,
+        deliveryFee,
+        total: itemsTotal + deliveryFee
+      };
+    }
+
+    // Render cart items
+    function renderCart() {
+      const items = loadCart();
+      
+      if (items.length === 0) {
+        emptyCart.classList.remove("hidden");
+        checkoutContent.classList.add("hidden");
+        return;
+      }
+
+      emptyCart.classList.add("hidden");
+      checkoutContent.classList.remove("hidden");
+
+      const { totalQuantity, hasDiscount, total } = calculateTotals(items);
+      
+      itemCountEl.textContent = items.length;
+      totalPriceEl.textContent = total.toFixed(2) + " د.أ";
+      
+      if (hasDiscount) {
+        deliveryFeeEl.classList.remove("hidden");
+      } else {
+        deliveryFeeEl.classList.add("hidden");
+      }
+
+      // Render items
+      cartItemsContainer.innerHTML = items.map((item, index) => {
+        const originalPrice = parseFloat(item.price.replace(/[^\d.]/g, "")) || 0;
+        const discountedPrice = hasDiscount ? originalPrice - 2 : originalPrice;
+        
+        return `
+          <div class="flex items-center gap-3 text-sm p-2 bg-gray-50 rounded-xl">
+            <img src="${item.image}" alt="${item.productName}" class="w-14 h-14 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+            <div class="flex-1 min-w-0">
+              <p class="font-medium truncate text-textDark">${item.productName}</p>
+              <p class="text-textLight text-xs">
+                ${item.colorName} ${item.size ? `• مقاس ${item.size}` : ""} • الكمية: ${item.quantity}
+              </p>
+            </div>
+            <div class="text-left flex-shrink-0">
+              <span class="font-bold text-black">${discountedPrice.toFixed(2)} د.أ</span>
+              ${hasDiscount ? `<span class="text-xs text-gray-400 line-through block">${originalPrice.toFixed(2)}</span>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Generate unique event ID
+    function generateEventId() {
+      const timestamp = Date.now().toString(36);
+      const random = Math.random().toString(36).substring(2, 10);
+      return `${timestamp}_${random}`;
+    }
+
+    // Check if we're in development environment
+    function isDevelopment() {
+      const hostname = window.location.hostname;
+      return hostname === "localhost" || hostname === "127.0.0.1" || hostname.startsWith("192.168.");
+    }
+
+    // Track Purchase (Client-side Meta Pixel)
+    function trackPurchase(items, totalValue, totalQuantity, eventId) {
+      if (typeof window.fbq !== "function") return;
+      
+      // ⛔ تعطيل التتبع في بيئة التطوير
+      if (isDevelopment()) {
+        console.log("[Meta Pixel - DEV] Skipped: Purchase", { items, totalValue, totalQuantity, eventId });
+        return;
+      }
+      
+      try {
+        window.fbq("track", "Purchase", {
+          content_ids: items.map(item => item.productId),
+          contents: items.map(item => ({
+            id: item.productId,
+            quantity: item.quantity,
+            item_price: parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+          })),
+          content_type: "product",
+          value: totalValue,
+          currency: "JOD",
+          num_items: totalQuantity,
+        }, { eventID: eventId });
+      } catch (e) {
+        console.error("[Meta Pixel] Error:", e);
+      }
+    }
+
+    // Get Facebook cookies
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return undefined;
+    }
+
+    // Send to backend API
+    async function sendToAPI(endpoint, data) {
+      try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "X-API-Key": API_KEY,
+          },
+          body: JSON.stringify(data),
+        });
+        return response.ok ? await response.json() : null;
+      } catch (e) {
+        console.error("[Backend API] Error:", e);
+        return null;
+      }
+    }
+
+    // Handle form submit
+    checkoutForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const items = loadCart();
+      if (items.length === 0) return;
+
+      // Get form data
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const governorate = document.getElementById("governorate").value;
+      const address = document.getElementById("address").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      // Calculate totals
+      const { totalQuantity, hasDiscount, total } = calculateTotals(items);
+      const eventId = generateEventId();
+
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl"></i><span>جاري الإرسال...</span>';
+
+      // 1. Track Purchase (Client-side)
+      trackPurchase(items, total, totalQuantity, eventId);
+
+      // 2. Track Purchase (Server-side) - Meta Conversion API
+      // ⛔ تعطيل التتبع في بيئة التطوير
+      if (!isDevelopment()) {
+        sendToAPI("/api/events/purchase", {
+          customerName: name,
+          customerPhone: phone,
+          city: governorate,
+          items: items.map(item => ({
+            productId: item.productId,
+            productName: item.productName || item.nameItemInStorage,
+            colorName: item.colorName,
+            price: hasDiscount 
+              ? (parseFloat(item.price.replace(/[^\d.]/g, "")) || 0) - 2 
+              : parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+            quantity: item.quantity,
+          })),
+          totalValue: total,
+          eventId,
+          sourceUrl: window.location.href,
+          fbc: getCookie("_fbc"),
+          fbp: getCookie("_fbp"),
+          userAgent: navigator.userAgent,
+        });
+      } else {
+        console.log("[Backend API - DEV] Skipped: Purchase tracking");
+      }
+
+      // 3. Send WhatsApp notification (to customer + store)
+      await sendToAPI("/api/whatsapp/notify-order", {
+        customerName: name,
+        customerPhone: phone,
+        governorate,
+        address,
+        notes,
+        items: items.map(item => ({
+          productName: item.nameItemInStorage || item.productName,
+          colorName: item.colorName,
+          size: item.size || "غير محدد",
+          quantity: item.quantity,
+          price: hasDiscount 
+            ? (parseFloat(item.price.replace(/[^\d.]/g, "")) || 0) - 2 
+            : parseFloat(item.price.replace(/[^\d.]/g, "")) || 0,
+        })),
+        totalValue: total,
+      });
+
+      // 4. Clear cart
+      localStorage.removeItem(CART_STORAGE_KEY);
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+
+      // 5. Set purchase completed flag and redirect to thank you page
+      sessionStorage.setItem("purchaseCompleted", "true");
+      window.location.href = "/thank-you";
+    });
+
+    // Initialize
+    renderCart();
+  </script>
+</Layout>

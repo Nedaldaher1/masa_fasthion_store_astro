@@ -1,0 +1,164 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="الأسئلة الشائعة - ماسة فاشين" description="إجابات على أكثر الأسئلة شيوعاً حول الطلب والتوصيل والدفع في ماسة فاشين">
+  <div class="min-h-screen pt-32 pb-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <a href="/" class="inline-flex items-center gap-2 text-gray-600 hover:text-black mb-4 transition">
+          <Icon name="chevron-right" class="text-sm" />
+          <span>العودة للمتجر</span>
+        </a>
+        <h1 class="text-3xl font-bold text-textDark mb-2">الأسئلة الشائعة</h1>
+        <p class="text-textLight">كل ما تحتاجين معرفته عن الطلب والتوصيل</p>
+      </div>
+
+      <!-- FAQ Items -->
+      <div class="space-y-4">
+        
+        <!-- Question 1 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">كيف أدفع؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              الدفع نقداً عند الاستلام فقط. لا نطلب أي دفع مسبق أو بطاقة بنكية. تدفعي فقط بعد ما توصلك القطعة وتتأكدي منها.
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">هل أقدر أشوف القطعة قبل الدفع؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              طبعاً! مندوب التوصيل يعطيك وقت تفتحي الطلب وتتأكدي من القطعة قبل ما تدفعي. إذا مو عاجبتك، ما في أي التزام.
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">كم يوم يوصل الطلب؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              نوصل خلال يوم عمل واحد لجميع المحافظات الأردنية (عمان، إربد، الزرقاء، العقبة، السلط، المفرق، الكرك، جرش، مادبا، عجلون، معان، الطفيلة).
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">إذا المقاس غلط؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              نبدلها مجاناً بدون أي رسوم إذا كان الخطأ من طرفنا أو إذا المقاس غير مناسب. فقط تواصلي معنا على واتساب وبنرتب التبديل.
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">إذا في عيب بالقطعة؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              نستبدلها فوراً بدون نقاش. ضمان كامل على العيوب المصنعية. تواصلي معنا وبنحل الموضوع.
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">كيف ألغي أو أعدل الطلب؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              تواصلي معنا على واتساب قبل شحن الطلب وبنعدله أو نلغيه بدون مشاكل. رقمنا: +962797514430
+            </p>
+          </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <button class="faq-toggle w-full p-5 text-right flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-bold text-textDark">ليش تطلبون رقم الهاتف والعنوان؟</span>
+            <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5">
+            <p class="text-textLight leading-relaxed">
+              نحتاج بياناتك فقط لتوصيل الطلب والتواصل معك عبر واتساب لتأكيد التفاصيل. لا نشارك بياناتك مع أي جهة أخرى ولا نرسل رسائل تسويقية.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Contact CTA -->
+      <div class="mt-10 text-center glass-card rounded-2xl p-6">
+        <h3 class="font-bold text-textDark mb-2">ما لقيتي جوابك؟</h3>
+        <p class="text-textLight text-sm mb-4">تواصلي معنا وبنرد عليك بأسرع وقت</p>
+        <a 
+          href="https://api.whatsapp.com/send?phone=962797514430" 
+          target="_blank"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          </svg>
+          <span>تواصلي معنا</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-toggle').forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('.faq-icon');
+        
+        // Toggle content
+        content?.classList.toggle('hidden');
+        
+        // Rotate icon
+        icon?.classList.toggle('rotate-180');
+      });
+    });
+  </script>
+</Layout>
