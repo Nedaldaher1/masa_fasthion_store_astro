@@ -55,7 +55,8 @@ export default function ProductView({ productId, optimizedColors }: Props) {
 
   // ✅ ViewContent عند عرض صفحة المنتج
   useEffect(() => {
-    const price = Number(product.price ?? 0);
+    // استخراج الرقم من النص (مثل "15.00 د.أ" → 15.00)
+    const price = parseFloat(product.price?.replace(/[^\d.]/g, "") || "0") || 0;
     const eventId = generateEventId();
     const category = product.category || "عبايات";
 
